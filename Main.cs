@@ -1,12 +1,8 @@
-// Copyright (c) Microsoft Corporation
-// The Microsoft Corporation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-
-using System;
-using System.Collections.Generic;
+using Community.PowerToys.Run.Plugin.GithubRepo.Properties;
+using ManagedCommon;
+using Microsoft.PowerToys.Settings.UI.Library;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.Caching;
@@ -14,11 +10,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Controls;
-using ManagedCommon;
-using Microsoft.PowerToys.Settings.UI.Library;
 using Wox.Infrastructure;
 using Wox.Plugin;
 using Wox.Plugin.Logger;
@@ -28,50 +20,50 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
 {
     public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable, IDisposable
     {
-        private static readonly CompositeFormat ErrorMsgFormat = CompositeFormat.Parse(Properties.Resources.plugin_search_failed);
-        private static readonly CompositeFormat PluginInBrowserName = CompositeFormat.Parse(Properties.Resources.plugin_in_browser_name);
+        private static readonly CompositeFormat ErrorMsgFormat = CompositeFormat.Parse(Resources.plugin_search_failed);
+        private static readonly CompositeFormat PluginInBrowserName = CompositeFormat.Parse(Resources.plugin_in_browser_name);
         private const string IconFork = "Fork.png";
         private const string IconRepo = "Repo.png";
         private const string DefaultUser = nameof(DefaultUser);
         private const string AuthToken = nameof(AuthToken);
 
-        private string _iconFolder;
-        private string _defaultUser;
-        private string _authToken;
+        private string? _iconFolder;
+        private string? _defaultUser;
+        private string? _authToken;
 
         private MemoryCache _cache = MemoryCache.Default;
 
         // Should only be set in Init()
-        private Action onPluginError;
+        private Action? onPluginError;
 
-        private PluginInitContext _context;
+        private PluginInitContext? _context;
 
-        private string _iconPath;
+        private string? _iconPath;
 
         private bool _disposed;
 
-        public string Name => Properties.Resources.plugin_name;
+        public string Name => Resources.plugin_name;
 
-        public string Description => Properties.Resources.plugin_description;
+        public string Description => Resources.plugin_description;
 
-        public string EmptyDescription => Properties.Resources.plugin_empty_description;
+        public string EmptyDescription => Resources.plugin_empty_description;
 
         public static string PluginID => "47B63DBFBDEE4F9C85EBA5F6CD69E243";
 
         public IEnumerable<PluginAdditionalOption> AdditionalOptions => new List<PluginAdditionalOption>()
         {
-            new PluginAdditionalOption()
+            new()
             {
                 PluginOptionType = PluginAdditionalOption.AdditionalOptionType.Textbox,
                 Key = DefaultUser,
-                DisplayLabel = Properties.Resources.plugin_default_user,
+                DisplayLabel = Resources.plugin_default_user,
                 TextValue = string.Empty,
             },
-            new PluginAdditionalOption()
+            new()
             {
                 PluginOptionType = PluginAdditionalOption.AdditionalOptionType.Textbox,
                 Key = AuthToken,
-                DisplayLabel = Properties.Resources.plugin_auth_token,
+                DisplayLabel = Resources.plugin_auth_token,
                 TextValue = string.Empty,
             },
         };
@@ -99,10 +91,10 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
 
         private static class Github
         {
-            private static HttpClient client;
+            private static readonly HttpClient client;
 
             // Used to cancel the request if the user types a new query
-            private static CancellationTokenSource cts;
+            private static CancellationTokenSource? cts;
 
             static Github()
             {
@@ -116,7 +108,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
             {
                 if (string.IsNullOrEmpty(auth))
                 {
-                    client.DefaultRequestHeaders.Remove("Authorization");
+                    _ = client.DefaultRequestHeaders.Remove("Authorization");
                 }
                 else
                 {
@@ -129,7 +121,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
                 cts?.Cancel();
                 cts = new CancellationTokenSource();
 
-                var response = await SendRequest<GithubResponse>($"https://api.github.com/search/repositories?q={query}", cts.Token);
+                GithubResponse response = await SendRequest<GithubResponse>($"https://api.github.com/search/repositories?q={query}", cts.Token);
                 return response.Items;
             }
 
@@ -140,7 +132,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
 
                 // assuming you're searching recent ones
                 // TODO: cache this, determin update interval
-                var response = await SendRequest<List<GithubRepo>>($"https://api.github.com/users/{user}/repos?sort=updated", cts.Token);
+                List<GithubRepo> response = await SendRequest<List<GithubRepo>>($"https://api.github.com/users/{user}/repos?sort=updated", cts.Token);
                 return response;
             }
 
@@ -148,10 +140,10 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
             {
                 try
                 {
-                    var responseMessage = await client.GetAsync(url, token);
-                    responseMessage.EnsureSuccessStatusCode();
-                    var json = await responseMessage.Content.ReadAsStringAsync(token);
-                    var response = JsonSerializer.Deserialize<T>(json);
+                    HttpResponseMessage responseMessage = await client.GetAsync(url, token);
+                    _ = responseMessage.EnsureSuccessStatusCode();
+                    string json = await responseMessage.Content.ReadAsStringAsync(token);
+                    T? response = JsonSerializer.Deserialize<T>(json);
                     return response;
                 }
                 catch (HttpRequestException e)
@@ -166,9 +158,9 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
         {
             ArgumentNullException.ThrowIfNull(query);
 
-            var results = new List<Result>();
-            var search = query.Search;
-            List<GithubRepo> repos;
+            List<Result> results = new();
+            string search = query.Search;
+            List<GithubRepo>? repos;
             string target = string.Empty;
 
             // empty query
@@ -202,8 +194,8 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
                 {
                     results.Add(new Result
                     {
-                        Title = Properties.Resources.plugin_default_user_not_set,
-                        SubTitle = Properties.Resources.plugin_default_user_not_set_description,
+                        Title = Resources.plugin_default_user_not_set,
+                        SubTitle = Resources.plugin_default_user_not_set_description,
                         QueryTextDisplay = string.Empty,
                         IcoPath = _iconPath,
                         Action = action =>
@@ -214,7 +206,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
                     return results;
                 }
 
-                var cacheKey = _defaultUser;
+                string cacheKey = _defaultUser;
                 target = $"{_defaultUser}{search}";
                 repos = _cache[cacheKey] as List<GithubRepo>;
 
@@ -226,9 +218,9 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
             }
             else if (search.Contains('/'))
             {
-                var split = search.Split('/', 2);
+                string[] split = search.Split('/', 2);
 
-                var cacheKey = split[0];
+                string cacheKey = split[0];
                 target = search;
                 repos = _cache[cacheKey] as List<GithubRepo>;
 
@@ -243,7 +235,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
                 repos = Github.RepoQuery(search).Result;
             }
 
-            foreach (var repo in repos)
+            foreach (GithubRepo repo in repos)
             {
                 results.Add(new Result
                 {
@@ -287,19 +279,19 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
 
                 Log.Error(errorMsgString, GetType());
                 _context.API.ShowMsg(
-                    $"Plugin: {Properties.Resources.plugin_name}",
+                    $"Plugin: {Resources.plugin_name}",
                     errorMsgString);
             };
         }
 
         public string GetTranslatedPluginTitle()
         {
-            return Properties.Resources.plugin_name;
+            return Resources.plugin_name;
         }
 
         public string GetTranslatedPluginDescription()
         {
-            return Properties.Resources.plugin_description;
+            return Resources.plugin_description;
         }
 
         private void OnThemeChanged(Theme oldtheme, Theme newTheme)
@@ -309,7 +301,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
 
         private void UpdateIconPath(Theme theme)
         {
-            if (theme == Theme.Light || theme == Theme.HighContrastWhite)
+            if (theme is Theme.Light or Theme.HighContrastWhite)
             {
                 _iconPath = "Images/light/GithubRepo.png";
                 _iconFolder = "Images/light";

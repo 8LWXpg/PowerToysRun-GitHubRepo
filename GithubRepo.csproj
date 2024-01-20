@@ -4,7 +4,14 @@
         <useWPF>true</useWPF>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <OutputType>Library</OutputType>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <AssemblyName>Community.PowerToys.Run.Plugin.GithubRepo</AssemblyName>
+        <Authors>TODO</Authors>
+        <Version>$([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory)plugin.json').Split(',')[5].Split(':')[1].Trim().Trim('"'))</Version>
+        <Title>Powertoys Run GithubRepo</Title>
+        <Product>Powertoys Run GithubRepo Plugin</Product>
+        <RepositoryUrl>TODO</RepositoryUrl>
+        <Platforms>x64;AnyCPU;ARM64</Platforms>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -22,29 +29,27 @@
 
     <ItemGroup>
         <Reference Include="PowerToys.Common.UI">
-            <HintPath>..\libs\PowerToys.Common.UI.dll</HintPath>
+            <HintPath>.\libs\PowerToys.Common.UI.dll</HintPath>
         </Reference>
         <Reference Include="PowerToys.ManagedCommon">
-            <HintPath>..\libs\PowerToys.ManagedCommon.dll</HintPath>
+            <HintPath>.\libs\PowerToys.ManagedCommon.dll</HintPath>
         </Reference>
         <Reference Include="Wox.Infrastructure">
-            <HintPath>..\libs\Wox.Infrastructure.dll</HintPath>
+            <HintPath>.\libs\Wox.Infrastructure.dll</HintPath>
         </Reference>
         <Reference Include="Wox.Plugin">
-            <HintPath>..\libs\Wox.Plugin.dll</HintPath>
+            <HintPath>.\libs\Wox.Plugin.dll</HintPath>
         </Reference>
         <Reference Include="PowerToys.Settings.UI.Lib">
-            <HintPath>..\libs\PowerToys.Settings.UI.Lib.dll</HintPath>
+            <HintPath>.\libs\PowerToys.Settings.UI.Lib.dll</HintPath>
         </Reference>
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="plugin.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-    </ItemGroup>
-
-    <ItemGroup>
+        <PackageReference Include="ILRepack" Version="2.0.27">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="System.Runtime.Caching" Version="8.0.0" />
     </ItemGroup>
 
@@ -64,6 +69,9 @@
     </ItemGroup>
 
     <ItemGroup>
+        <None Include="plugin.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
         <None Update="Images\dark\*.png">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
