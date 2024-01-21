@@ -7,11 +7,12 @@ $assembly = 'Community.PowerToys.Run.Plugin.GithubRepo.dll'
 $merge = 'System.Runtime.Caching.dll'
 
 foreach($arch in @('x64','ARM64')){
+	dotnet build -c Release /p:Platform=$arch
+	
 	pushd
 	cd ".\bin\$arch\Release\net8.0-windows"
 
-
-	Compress-Archive $assembly, .\plugin.json, .\images "$PSScriptRoot\GithubRepo_$arch.zip" -Force
+	& $ilrepack /lib:$lib /out:$assembly $assembly $merge
 	popd
 }
 

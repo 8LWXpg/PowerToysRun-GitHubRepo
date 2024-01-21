@@ -4,6 +4,7 @@
         <useWPF>true</useWPF>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <EmbeddedResourceUseDependentUponConvention>true</EmbeddedResourceUseDependentUponConvention>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <AssemblyName>Community.PowerToys.Run.Plugin.GithubRepo</AssemblyName>
         <Authors>TODO</Authors>
@@ -28,6 +29,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="PowerToys.exe" />
+    </ItemGroup>
+
+    <ItemGroup>
         <Reference Include="PowerToys.Common.UI">
             <HintPath>.\libs\PowerToys.Common.UI.dll</HintPath>
         </Reference>
@@ -46,10 +51,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="ILRepack" Version="2.0.27">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
         <PackageReference Include="System.Runtime.Caching" Version="8.0.0" />
     </ItemGroup>
 

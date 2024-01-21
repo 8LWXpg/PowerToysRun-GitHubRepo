@@ -3,12 +3,8 @@ using ManagedCommon;
 using Microsoft.PowerToys.Settings.UI.Library;
 using System.Globalization;
 using System.IO;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Runtime.Caching;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Windows.Controls;
 using Wox.Infrastructure;
@@ -68,97 +64,11 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
             },
         };
 
-        private struct GithubResponse
-        {
-            [JsonPropertyName("items")]
-            public List<GithubRepo> Items { get; set; }
-        }
-
-        private struct GithubRepo
-        {
-            [JsonPropertyName("full_name")]
-            public string FullName { get; set; }
-
-            [JsonPropertyName("html_url")]
-            public string HtmlUrl { get; set; }
-
-            [JsonPropertyName("description")]
-            public string Description { get; set; }
-
-            [JsonPropertyName("fork")]
-            public bool Fork { get; set; }
-        }
-
-        private static class Github
-        {
-            private static readonly HttpClient client;
-
-            // Used to cancel the request if the user types a new query
-            private static CancellationTokenSource? cts;
-
-            static Github()
-            {
-                client = new HttpClient();
-                client.DefaultRequestHeaders.UserAgent.Add(ProductInfoHeaderValue.Parse("PowerToys"));
-                client.DefaultRequestHeaders.Add("Accept", "application/vnd.github+json");
-                client.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
-            }
-
-            public static void UpdateAuthSetting(string auth)
-            {
-                if (string.IsNullOrEmpty(auth))
-                {
-                    _ = client.DefaultRequestHeaders.Remove("Authorization");
-                }
-                else
-                {
-                    client.DefaultRequestHeaders.Add("Authorization:", $"Bearer {auth}");
-                }
-            }
-
-            public static async Task<List<GithubRepo>> RepoQuery(string query)
-            {
-                cts?.Cancel();
-                cts = new CancellationTokenSource();
-
-                GithubResponse response = await SendRequest<GithubResponse>($"https://api.github.com/search/repositories?q={query}", cts.Token);
-                return response.Items;
-            }
-
-            public static async Task<List<GithubRepo>> UserRepoQuery(string user)
-            {
-                cts?.Cancel();
-                cts = new CancellationTokenSource();
-
-                // assuming you're searching recent ones
-                // TODO: cache this, determin update interval
-                List<GithubRepo> response = await SendRequest<List<GithubRepo>>($"https://api.github.com/users/{user}/repos?sort=updated", cts.Token);
-                return response;
-            }
-
-            private static async Task<T> SendRequest<T>(string url, CancellationToken token)
-            {
-                try
-                {
-                    HttpResponseMessage responseMessage = await client.GetAsync(url, token);
-                    _ = responseMessage.EnsureSuccessStatusCode();
-                    string json = await responseMessage.Content.ReadAsStringAsync(token);
-                    T? response = JsonSerializer.Deserialize<T>(json);
-                    return response;
-                }
-                catch (HttpRequestException e)
-                {
-                    Log.Error(e.Message, typeof(Main));
-                    return default;
-                }
-            }
-        }
-
         public List<Result> Query(Query query)
         {
             ArgumentNullException.ThrowIfNull(query);
 
-            List<Result> results = new();
+            List<Result> results = [];
             string search = query.Search;
             List<GithubRepo>? repos;
             string target = string.Empty;
@@ -210,11 +120,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
                 target = $"{_defaultUser}{search}";
                 repos = _cache[cacheKey] as List<GithubRepo>;
 
-                if (repos is null)
-                {
-                    repos = Github.UserRepoQuery(cacheKey).Result;
-                    _cache.Set(cacheKey, repos, new CacheItemPolicy { SlidingExpiration = TimeSpan.FromMinutes(1) });
-                }
+                repos ??= UserRepoQuery(cacheKey);
             }
             else if (search.Contains('/'))
             {
@@ -224,18 +130,14 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
                 target = search;
                 repos = _cache[cacheKey] as List<GithubRepo>;
 
-                if (repos is null)
-                {
-                    repos = Github.UserRepoQuery(cacheKey).Result;
-                    _cache.Set(cacheKey, repos, new CacheItemPolicy { SlidingExpiration = TimeSpan.FromMinutes(1) });
-                }
+                repos ??= UserRepoQuery(cacheKey);
             }
             else
             {
-                repos = Github.RepoQuery(search).Result;
+                repos = RepoQuery(search);
             }
 
-            foreach (GithubRepo repo in repos)
+            foreach (var repo in repos)
             {
                 results.Add(new Result
                 {
@@ -256,14 +158,45 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
                 });
             }
 
-            // no need to fuzzy search if use repo search directly
+            // no need to search if use repo search api
             if (string.IsNullOrEmpty(target))
             {
                 return results;
             }
 
+            // TODO: other search algorithm
             results = results.Where(r => r.Title.StartsWith(target, StringComparison.OrdinalIgnoreCase)).ToList();
             return results;
+
+            List<GithubRepo> UserRepoQuery(string cacheKey)
+            {
+                return Github.UserRepoQuery(cacheKey).Result.Match(
+                    ok: r =>
+                    {
+                        _cache.Set(cacheKey, r, new CacheItemPolicy { SlidingExpiration = TimeSpan.FromMinutes(1) });
+                        return r;
+                    },
+                    err: e => new List<GithubRepo> { new() {
+                                FullName = e.GetType().Name,
+                                Description = e.Message,
+                                HtmlUrl = string.Empty,
+                                Fork = false,
+                            } }
+                    );
+            }
+
+            static List<GithubRepo> RepoQuery(string search)
+            {
+                return Github.RepoQuery(search).Result.Match(
+                    ok: r => r.Items,
+                    err: e => new List<GithubRepo> { new() {
+                                FullName = e.GetType().Name,
+                                Description = e.Message,
+                                HtmlUrl = string.Empty,
+                                Fork = false,
+                            } }
+                    );
+            }
         }
 
         public void Init(PluginInitContext context)
