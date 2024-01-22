@@ -12,7 +12,7 @@
         <Title>Powertoys Run GithubRepo</Title>
         <Product>Powertoys Run GithubRepo Plugin</Product>
         <RepositoryUrl>TODO</RepositoryUrl>
-        <Platforms>x64;AnyCPU;ARM64</Platforms>
+        <Platforms>x64;ARM64</Platforms>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -29,7 +29,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <None Remove="PowerToys.exe" />
+        <None Remove="PowerToys.exe" />
     </ItemGroup>
 
     <ItemGroup>

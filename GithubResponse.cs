@@ -34,47 +34,47 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
         private readonly T? Value;
         private readonly E? Exception;
 
-        private QueryResult(T v, E e, bool success)
+        private QueryResult(T? v, E? e, bool success)
         {
             _success = success;
             Value = v;
             Exception = e;
         }
 
-        public static QueryResult<T, E?> Ok(T v) => new(v, default, true);
-        public static QueryResult<T?, E> Err(E e) => new(default, e, false);
+        public static QueryResult<T, E> Ok(T v) => new(v, default, true);
+        public static QueryResult<T, E> Err(E e) => new(default, e, false);
 
         public static implicit operator bool(QueryResult<T, E> result) => result._success;
-        public static implicit operator QueryResult<T, E>(T v) => v;
-        public static implicit operator QueryResult<T, E>(E e) => e;
+        public static implicit operator QueryResult<T, E>(T v) => new(v, default, true);
+        public static implicit operator QueryResult<T, E>(E e) => new(default, e, false);
 
         public R Match<R>(Func<T, R> ok, Func<E, R> err) => _success ? ok(Value!) : err(Exception!);
     }
 
     public static class Github
     {
-        private static readonly HttpClient client;
+        private static readonly HttpClient Client;
 
         // Used to cancel the request if the user types a new query
         private static CancellationTokenSource? cts;
 
         static Github()
         {
-            client = new HttpClient();
-            client.DefaultRequestHeaders.UserAgent.Add(ProductInfoHeaderValue.Parse("PowerToys"));
-            client.DefaultRequestHeaders.Add("Accept", "application/vnd.github+json");
-            client.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
+            Client = new HttpClient();
+            Client.DefaultRequestHeaders.UserAgent.Add(ProductInfoHeaderValue.Parse("PowerToys"));
+            Client.DefaultRequestHeaders.Add("Accept", "application/vnd.github+json");
+            Client.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
         }
 
         public static void UpdateAuthSetting(string auth)
         {
             if (string.IsNullOrEmpty(auth))
             {
-                client.DefaultRequestHeaders.Remove("Authorization");
+                Client.DefaultRequestHeaders.Remove("Authorization");
             }
             else
             {
-                client.DefaultRequestHeaders.Add("Authorization:", $"Bearer {auth}");
+                Client.DefaultRequestHeaders.Add("Authorization", $"Bearer {auth}");
             }
         }
 
@@ -99,7 +99,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
         {
             try
             {
-                HttpResponseMessage responseMessage = await client.GetAsync(url, token);
+                HttpResponseMessage responseMessage = await Client.GetAsync(url, token);
                 _ = responseMessage.EnsureSuccessStatusCode();
                 string json = await responseMessage.Content.ReadAsStringAsync(token);
                 T? response = JsonSerializer.Deserialize<T>(json);

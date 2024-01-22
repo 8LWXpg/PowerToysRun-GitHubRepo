@@ -88,7 +88,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
                     {
                         if (!Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, arguments))
                         {
-                            onPluginError();
+                            onPluginError!();
                             return false;
                         }
 
@@ -118,7 +118,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
 
                 string cacheKey = _defaultUser;
                 target = $"{_defaultUser}{search}";
-                repos = _cache[cacheKey] as List<GithubRepo>;
+                repos = _cache[search] as List<GithubRepo>;
 
                 repos ??= UserRepoQuery(cacheKey);
             }
@@ -128,7 +128,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
 
                 string cacheKey = split[0];
                 target = search;
-                repos = _cache[cacheKey] as List<GithubRepo>;
+                repos = _cache[search] as List<GithubRepo>;
 
                 repos ??= UserRepoQuery(cacheKey);
             }
@@ -137,19 +137,19 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
                 repos = RepoQuery(search);
             }
 
-            foreach (var repo in repos)
+            foreach (GithubRepo repo in repos)
             {
                 results.Add(new Result
                 {
                     Title = repo.FullName,
                     SubTitle = repo.Description,
                     QueryTextDisplay = repo.FullName,
-                    IcoPath = repo.Fork ? Path.Combine(_iconFolder, IconFork) : Path.Combine(_iconFolder, IconRepo),
+                    IcoPath = repo.Fork ? Path.Combine(_iconFolder!, IconFork) : Path.Combine(_iconFolder!, IconRepo),
                     Action = action =>
                     {
                         if (!Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl))
                         {
-                            onPluginError();
+                            onPluginError!();
                             return false;
                         }
 
@@ -168,34 +168,40 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
             results = results.Where(r => r.Title.StartsWith(target, StringComparison.OrdinalIgnoreCase)).ToList();
             return results;
 
-            List<GithubRepo> UserRepoQuery(string cacheKey)
+            List<GithubRepo> UserRepoQuery(string search)
             {
-                return Github.UserRepoQuery(cacheKey).Result.Match(
+                return Github.UserRepoQuery(search).Result.Match(
                     ok: r =>
                     {
-                        _cache.Set(cacheKey, r, new CacheItemPolicy { SlidingExpiration = TimeSpan.FromMinutes(1) });
+                        _cache.Set(search, r, new CacheItemPolicy { SlidingExpiration = TimeSpan.FromMinutes(1) });
                         return r;
                     },
-                    err: e => new List<GithubRepo> { new() {
-                                FullName = e.GetType().Name,
-                                Description = e.Message,
-                                HtmlUrl = string.Empty,
-                                Fork = false,
-                            } }
-                    );
+                    err: e => new List<GithubRepo>
+                    {
+                        new()
+                        {
+                            FullName = e.GetType().Name,
+                            Description = e.Message,
+                            HtmlUrl = string.Empty,
+                            Fork = false,
+                        }
+                    });
             }
 
             static List<GithubRepo> RepoQuery(string search)
             {
                 return Github.RepoQuery(search).Result.Match(
                     ok: r => r.Items,
-                    err: e => new List<GithubRepo> { new() {
-                                FullName = e.GetType().Name,
-                                Description = e.Message,
-                                HtmlUrl = string.Empty,
-                                Fork = false,
-                            } }
-                    );
+                    err: e => new List<GithubRepo>
+                    {
+                        new()
+                        {
+                            FullName = e.GetType().Name,
+                            Description = e.Message,
+                            HtmlUrl = string.Empty,
+                            Fork = false,
+                        }
+                    });
             }
         }
 
