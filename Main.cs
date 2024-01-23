@@ -17,12 +17,13 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
     {
         private static readonly CompositeFormat ErrorMsgFormat = CompositeFormat.Parse(Resources.plugin_search_failed);
         private static readonly CompositeFormat PluginInBrowserName = CompositeFormat.Parse(Resources.plugin_in_browser_name);
-        private const string IconFork = "Fork.png";
-        private const string IconRepo = "Repo.png";
         private const string DefaultUser = nameof(DefaultUser);
         private const string AuthToken = nameof(AuthToken);
 
-        private string? _iconFolder;
+        private string? _iconFolderPath;
+        private string? _iconFork;
+        private string? _iconRepo;
+        private string? _icon;
         private string? _defaultUser;
         private string? _authToken;
 
@@ -32,8 +33,6 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
         private Action? onPluginError;
 
         private PluginInitContext? _context;
-
-        private string? _iconPath;
 
         private bool _disposed;
 
@@ -83,7 +82,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
                     Title = EmptyDescription,
                     SubTitle = string.Format(CultureInfo.CurrentCulture, PluginInBrowserName, BrowserInfo.Name ?? BrowserInfo.MSEdgeName),
                     QueryTextDisplay = string.Empty,
-                    IcoPath = _iconPath,
+                    IcoPath = _icon,
                     ProgramArguments = arguments,
                     Action = action =>
                     {
@@ -108,7 +107,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
                         Title = Resources.plugin_default_user_not_set,
                         SubTitle = Resources.plugin_default_user_not_set_description,
                         QueryTextDisplay = string.Empty,
-                        IcoPath = _iconPath,
+                        IcoPath = _icon,
                         Action = action =>
                         {
                             return true;
@@ -143,7 +142,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
                     Title = repo.FullName,
                     SubTitle = repo.Description,
                     QueryTextDisplay = repo.FullName,
-                    IcoPath = repo.Fork ? Path.Combine(_iconFolder!, IconFork) : Path.Combine(_iconFolder!, IconRepo),
+                    IcoPath = repo.Fork ? _iconFork : _iconRepo,
                     Action = action =>
                     {
                         if (!Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl))
@@ -186,7 +185,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
                     Title = repo.FullName,
                     SubTitle = repo.Description,
                     QueryTextDisplay = repo.FullName,
-                    IcoPath = repo.Fork ? Path.Combine(_iconFolder!, IconFork) : Path.Combine(_iconFolder!, IconRepo),
+                    IcoPath = repo.Fork ? _iconFork : _iconRepo,
                     Action = action =>
                     {
                         if (!Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl))
@@ -247,14 +246,15 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
         {
             if (theme is Theme.Light or Theme.HighContrastWhite)
             {
-                _iconPath = "Images/light/GithubRepo.png";
-                _iconFolder = "Images/light";
+                _iconFolderPath = "Images/light";
             }
             else
             {
-                _iconPath = "Images/dark/GithubRepo.png";
-                _iconFolder = "Images/dark";
+                _iconFolderPath = "Images/dark";
             }
+            _icon = $"{_iconFolderPath}Github.png";
+            _iconRepo = $"{_iconFolderPath}Repo.png";
+            _iconFork = $"{_iconFolderPath}Fork.png";
         }
 
         public Control CreateSettingPanel()
