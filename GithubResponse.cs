@@ -3,7 +3,6 @@ using System.Net.Http.Headers;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using Wox.Plugin.Logger;
-using System.Windows.Navigation;
 
 namespace Community.PowerToys.Run.Plugin.GithubRepo
 {

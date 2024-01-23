@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.IO;
 using System.Text;
 using System.Windows.Controls;
 using Community.PowerToys.Run.Plugin.GithubRepo.Properties;
@@ -23,7 +22,6 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
         private string? _iconFolderPath;
         private string? _iconFork;
         private string? _iconRepo;
-        private string? _icon;
         private string? _defaultUser;
         private string? _authToken;
 
@@ -31,6 +29,8 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
 
         // Should only be set in Init()
         private Action? onPluginError;
+
+        private string _iconPath;
 
         private PluginInitContext? _context;
 
@@ -82,7 +82,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
                     Title = EmptyDescription,
                     SubTitle = string.Format(CultureInfo.CurrentCulture, PluginInBrowserName, BrowserInfo.Name ?? BrowserInfo.MSEdgeName),
                     QueryTextDisplay = string.Empty,
-                    IcoPath = _icon,
+                    IcoPath = _iconPath,
                     ProgramArguments = arguments,
                     Action = action =>
                     {
@@ -107,7 +107,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
                         Title = Resources.plugin_default_user_not_set,
                         SubTitle = Resources.plugin_default_user_not_set_description,
                         QueryTextDisplay = string.Empty,
-                        IcoPath = _icon,
+                        IcoPath = _iconPath,
                         Action = action =>
                         {
                             return true;
@@ -252,9 +252,9 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
             {
                 _iconFolderPath = "Images/dark";
             }
-            _icon = $"{_iconFolderPath}Github.png";
-            _iconRepo = $"{_iconFolderPath}Repo.png";
-            _iconFork = $"{_iconFolderPath}Fork.png";
+            _iconPath = $"{_iconFolderPath}/Github.png";
+            _iconRepo = $"{_iconFolderPath}/Repo.png";
+            _iconFork = $"{_iconFolderPath}/Fork.png";
         }
 
         public Control CreateSettingPanel()
@@ -265,13 +265,9 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
         public void UpdateSettings(PowerLauncherPluginSettings settings)
         {
             _defaultUser = settings?.AdditionalOptions?.FirstOrDefault(x => x.Key == DefaultUser)?.TextValue ?? string.Empty;
-            var authToken = settings?.AdditionalOptions?.FirstOrDefault(x => x.Key == AuthToken);
-            if (authToken != null)
-            {
-                _authToken = authToken.TextValue;
-                authToken.TextValue = new string('*', _authToken.Length);
-                Github.UpdateAuthSetting(_authToken);
-            }
+            // TODO: how not to show the auth token in the settings?
+            _authToken = settings?.AdditionalOptions?.FirstOrDefault(x => x.Key == AuthToken)?.TextValue ?? string.Empty;
+            Github.UpdateAuthSetting(_authToken);
         }
 
         public void ReloadData()

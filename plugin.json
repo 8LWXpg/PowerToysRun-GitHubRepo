@@ -3,11 +3,11 @@
   "ActionKeyword": "gr",
   "IsGlobal": false,
   "Name": "GithubRepository Search",
-  "Author": "TODO",
+  "Author": "8LWXpg",
   "Version": "1.0.0",
   "Language": "csharp",
-  "Website": "https://aka.ms/powertoys",
+  "Website": "https://github.com/8LWXpg/PowerToysRun-GithubRepo",
   "ExecuteFileName": "Community.PowerToys.Run.Plugin.GithubRepo.dll",
-  "IcoPathDark": "Images\\dark\\GithubRepo.png",
-  "IcoPathLight": "Images\\light\\GithubRepo.png"
+  "IcoPathDark": "Images\\dark\\Github.png",
+  "IcoPathLight": "Images\\light\\Github.png"
 }

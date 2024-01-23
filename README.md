@@ -24,11 +24,10 @@ This is a plugin for [PowerToys Run](https://github.com/microsoft/PowerToys/wiki
 
 ## Build
 
-1. Follow the instructions to [build PowerToys from source](https://github.com/microsoft/PowerToys/blob/main/doc/devdocs/readme.md#compiling-powertoys).
-2. Clone this repository under `.\src\modules\launcher\Plugins`.
-3. In VS, add local clone as an existing project to PowerToy's Plugins folder `.\src\modules\launcher\Plugins`.
-4. Build this project in VS and select `PowerLauncher` as the debug target.
+1. Clone the repository.
+2. Clone the dependencies in `/lib`.
+3. run `dotnet build -c Release`.
 
 ## Contributing
 
-Contributions are welcome! Please see our [contributing guidelines](CONTRIBUTING.md) for more information.
+Contributions are welcome!

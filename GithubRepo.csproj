@@ -4,14 +4,14 @@
         <useWPF>true</useWPF>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <EmbeddedResourceUseDependentUponConvention>true</EmbeddedResourceUseDependentUponConvention>
+        <!-- <EmbeddedResourceUseDependentUponConvention>true</EmbeddedResourceUseDependentUponConvention> -->
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <AssemblyName>Community.PowerToys.Run.Plugin.GithubRepo</AssemblyName>
-        <Authors>TODO</Authors>
+        <Authors>8LWXpg</Authors>
         <Version>$([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory)plugin.json').Split(',')[5].Split(':')[1].Trim().Trim('"'))</Version>
         <Title>Powertoys Run GithubRepo</Title>
         <Product>Powertoys Run GithubRepo Plugin</Product>
-        <RepositoryUrl>TODO</RepositoryUrl>
+        <RepositoryUrl>https://github.com/8LWXpg/PowerToysRun-GithubRepo</RepositoryUrl>
         <Platforms>x64;ARM64</Platforms>
     </PropertyGroup>
 
