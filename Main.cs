@@ -30,7 +30,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
         // Should only be set in Init()
         private Action? onPluginError;
 
-        private string _iconPath;
+        private string? _iconPath;
 
         private PluginInitContext? _context;
 
