@@ -51,7 +51,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.Runtime.Caching" Version="8.0.0" />
+        <PackageReference Include="LazyCache" Version="2.4.0" />
     </ItemGroup>
 
     <ItemGroup>

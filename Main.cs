@@ -1,12 +1,11 @@
-using Community.PowerToys.Run.Plugin.GithubRepo.Properties;
-using ManagedCommon;
-using Microsoft.PowerToys.Settings.UI.Library;
 using System.Globalization;
 using System.IO;
-using System.Runtime.Caching;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Controls;
+using Community.PowerToys.Run.Plugin.GithubRepo.Properties;
+using LazyCache;
+using ManagedCommon;
+using Microsoft.PowerToys.Settings.UI.Library;
 using Wox.Infrastructure;
 using Wox.Plugin;
 using Wox.Plugin.Logger;
@@ -14,7 +13,7 @@ using BrowserInfo = Wox.Plugin.Common.DefaultBrowserInfo;
 
 namespace Community.PowerToys.Run.Plugin.GithubRepo
 {
-    public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable, IDisposable
+    public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable, IDisposable, IDelayedExecutionPlugin
     {
         private static readonly CompositeFormat ErrorMsgFormat = CompositeFormat.Parse(Resources.plugin_search_failed);
         private static readonly CompositeFormat PluginInBrowserName = CompositeFormat.Parse(Resources.plugin_in_browser_name);
@@ -27,7 +26,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
         private string? _defaultUser;
         private string? _authToken;
 
-        private MemoryCache _cache = MemoryCache.Default;
+        private CachingService? _cache;
 
         // Should only be set in Init()
         private Action? onPluginError;
@@ -53,17 +52,19 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
                 PluginOptionType = PluginAdditionalOption.AdditionalOptionType.Textbox,
                 Key = DefaultUser,
                 DisplayLabel = Resources.plugin_default_user,
-                TextValue = string.Empty,
+                TextBoxMaxLength = 39,
+                Value = false,
             },
             new()
             {
                 PluginOptionType = PluginAdditionalOption.AdditionalOptionType.Textbox,
                 Key = AuthToken,
                 DisplayLabel = Resources.plugin_auth_token,
-                TextValue = string.Empty,
+                Value = false,
             },
         };
 
+        // handle user repo search
         public List<Result> Query(Query query)
         {
             ArgumentNullException.ThrowIfNull(query);
@@ -118,9 +119,8 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
 
                 string cacheKey = _defaultUser;
                 target = $"{_defaultUser}{search}";
-                repos = _cache[search] as List<GithubRepo>;
 
-                repos ??= UserRepoQuery(cacheKey);
+                repos = _cache.GetOrAdd(cacheKey, () => UserRepoQuery(cacheKey));
             }
             else if (search.Contains('/'))
             {
@@ -128,16 +128,15 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
 
                 string cacheKey = split[0];
                 target = search;
-                repos = _cache[search] as List<GithubRepo>;
 
-                repos ??= UserRepoQuery(cacheKey);
+                repos = _cache.GetOrAdd(cacheKey, () => UserRepoQuery(cacheKey));
             }
             else
             {
-                repos = RepoQuery(search);
+                return new List<Result>();
             }
 
-            foreach (GithubRepo repo in repos)
+            foreach (var repo in repos)
             {
                 results.Add(new Result
                 {
@@ -158,57 +157,63 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
                 });
             }
 
-            // no need to search if use repo search api
-            if (string.IsNullOrEmpty(target))
-            {
-                return results;
-            }
-
             // TODO: other search algorithm
             results = results.Where(r => r.Title.StartsWith(target, StringComparison.OrdinalIgnoreCase)).ToList();
             return results;
 
-            List<GithubRepo> UserRepoQuery(string search)
+            static List<GithubRepo> UserRepoQuery(string search) =>
+                Github.UserRepoQuery(search).Result.Match(
+                    ok: r => r,
+                    err: e => new List<GithubRepo> { new(e.GetType().Name, e.Message, string.Empty, false) });
+        }
+
+        // handle repo search with delay
+        public List<Result> Query(Query query, bool delayedExecution)
+        {
+            if (!delayedExecution || query.Search.Contains('/') || string.IsNullOrWhiteSpace(query.Search))
             {
-                return Github.UserRepoQuery(search).Result.Match(
-                    ok: r =>
-                    {
-                        _cache.Set(search, r, new CacheItemPolicy { SlidingExpiration = TimeSpan.FromMinutes(1) });
-                        return r;
-                    },
-                    err: e => new List<GithubRepo>
-                    {
-                        new()
-                        {
-                            FullName = e.GetType().Name,
-                            Description = e.Message,
-                            HtmlUrl = string.Empty,
-                            Fork = false,
-                        }
-                    });
+                return new List<Result>();
             }
 
-            static List<GithubRepo> RepoQuery(string search)
+            List<Result> results = [];
+
+            var repos = RepoQuery(query.Search);
+
+            foreach (var repo in repos)
             {
-                return Github.RepoQuery(search).Result.Match(
-                    ok: r => r.Items,
-                    err: e => new List<GithubRepo>
+                results.Add(new Result
+                {
+                    Title = repo.FullName,
+                    SubTitle = repo.Description,
+                    QueryTextDisplay = repo.FullName,
+                    IcoPath = repo.Fork ? Path.Combine(_iconFolder!, IconFork) : Path.Combine(_iconFolder!, IconRepo),
+                    Action = action =>
                     {
-                        new()
+                        if (!Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl))
                         {
-                            FullName = e.GetType().Name,
-                            Description = e.Message,
-                            HtmlUrl = string.Empty,
-                            Fork = false,
+                            onPluginError!();
+                            return false;
                         }
-                    });
+
+                        return true;
+                    },
+                });
             }
+
+            return results;
+
+            static List<GithubRepo> RepoQuery(string search) =>
+                Github.RepoQuery(search).Result.Match(
+                    ok: r => r.Items,
+                    err: e => new List<GithubRepo> { new(e.GetType().Name, e.Message, string.Empty, false) });
         }
 
         public void Init(PluginInitContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _context.API.ThemeChanged += OnThemeChanged;
+            _cache = new CachingService();
+            _cache.DefaultCachePolicy.DefaultCacheDurationSeconds = (int)TimeSpan.FromMinutes(1).TotalSeconds;
             UpdateIconPath(_context.API.GetCurrentTheme());
             BrowserInfo.UpdateIfTimePassed();
 
@@ -260,8 +265,13 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
         public void UpdateSettings(PowerLauncherPluginSettings settings)
         {
             _defaultUser = settings?.AdditionalOptions?.FirstOrDefault(x => x.Key == DefaultUser)?.TextValue ?? string.Empty;
-            _authToken = settings?.AdditionalOptions?.FirstOrDefault(x => x.Key == AuthToken)?.TextValue ?? string.Empty;
-            Github.UpdateAuthSetting(_authToken);
+            var authToken = settings?.AdditionalOptions?.FirstOrDefault(x => x.Key == AuthToken);
+            if (authToken != null)
+            {
+                _authToken = authToken.TextValue;
+                authToken.TextValue = new string('*', _authToken.Length);
+                Github.UpdateAuthSetting(_authToken);
+            }
         }
 
         public void ReloadData()
@@ -293,8 +303,5 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
                 _disposed = true;
             }
         }
-
-        [GeneratedRegex("[^\\u0020-\\u007E]")]
-        private static partial Regex AllowedCharacters();
     }
 }

@@ -7,25 +7,38 @@ using System.Windows.Navigation;
 
 namespace Community.PowerToys.Run.Plugin.GithubRepo
 {
-    public struct GithubResponse
+    public record GithubResponse
     {
         [JsonPropertyName("items")]
-        public List<GithubRepo> Items { get; set; }
+        public List<GithubRepo> Items { get; init; }
+
+        public GithubResponse(List<GithubRepo> items)
+        {
+            Items = items;
+        }
     }
 
-    public struct GithubRepo
+    public record GithubRepo
     {
         [JsonPropertyName("full_name")]
-        public string FullName { get; set; }
+        public string FullName { get; init; }
 
         [JsonPropertyName("html_url")]
-        public string HtmlUrl { get; set; }
+        public string HtmlUrl { get; init; }
 
         [JsonPropertyName("description")]
-        public string Description { get; set; }
+        public string Description { get; init; }
 
         [JsonPropertyName("fork")]
-        public bool Fork { get; set; }
+        public bool Fork { get; init; }
+
+        public GithubRepo(string fullName, string htmlUrl, string description, bool fork)
+        {
+            FullName = fullName;
+            HtmlUrl = htmlUrl;
+            Description = description;
+            Fork = fork;
+        }
     }
 
     public class QueryResult<T, E>
@@ -74,6 +87,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
             }
             else
             {
+                Client.DefaultRequestHeaders.Remove("Authorization");
                 Client.DefaultRequestHeaders.Add("Authorization", $"Bearer {auth}");
             }
         }
