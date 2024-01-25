@@ -16,7 +16,7 @@ foreach($arch in $archs){
 	dotnet build -c Release /p:Platform=$arch
 
 	rm ./out/GithubRepo/* -r -fo -ea ig
-	cp "$releasePath/$assembly.dll", "$releasePath/plugin.json", "$releasePath/images", "$releasePath/$assembly.deps.json" "./out/$name" -fo
+	cp "$releasePath/$assembly.dll", "$releasePath/plugin.json", "$releasePath/Images", "$releasePath/$assembly.deps.json" "./out/$name" -r -fo
 	Compress-Archive "./out/$name" "./out/$name-$version-$arch.zip" -fo
 }
 
