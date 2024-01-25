@@ -98,6 +98,12 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
                 return results;
             }
 
+            // delay execution for repo query
+            if (!search.Contains('/'))
+            {
+                return new List<Result>();
+            }
+
             if (search.StartsWith('/'))
             {
                 if (string.IsNullOrEmpty(_defaultUser))
@@ -121,7 +127,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
 
                 repos = _cache.GetOrAdd(cacheKey, () => UserRepoQuery(cacheKey));
             }
-            else if (search.Contains('/'))
+            else
             {
                 string[] split = search.Split('/', 2);
 
@@ -129,10 +135,6 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
                 target = search;
 
                 repos = _cache.GetOrAdd(cacheKey, () => UserRepoQuery(cacheKey));
-            }
-            else
-            {
-                return new List<Result>();
             }
 
             foreach (var repo in repos)
