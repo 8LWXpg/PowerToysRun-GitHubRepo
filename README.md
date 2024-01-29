@@ -4,16 +4,22 @@ This is a plugin for [PowerToys Run](https://github.com/microsoft/PowerToys/wiki
 
 ## Features
 
-- Search repo with query: `qurey`
-- Search repo with user: `user/repo`
-- Search repo with default user: `/repo`
+### Search repo with query: `qurey`
+
+![Search repo with query](./assets/repo.png)
+
+### Search repo with user: `user/repo`
+
+![Search repo with user](./assets/user.png)
+
+### Search repo with default user: `/repo`
+
+![Search repo with default user](./assets/default_user.png)
 
 ## Installation
 
 1. Download the latest release of the from the releases page.
-2. Extract the zip file's contents to your PowerToys modules directory .
-    - `%LocalAppdata%\PowerToys\RunPlugins` if installed for the current user.
-    - `%ProgramFiles%\PowerToys\RunPlugins` if installed for all users.
+2. Extract the zip file's contents to `%LocalAppData%\Microsoft\PowerToys\PowerToys Run\Plugins`
 3. Restart PowerToys.
 
 ## Usage
@@ -22,11 +28,23 @@ This is a plugin for [PowerToys Run](https://github.com/microsoft/PowerToys/wiki
 2. Type `gr` followed by your search query.
 3. Select a search result and press `Enter` to open it in browser.
 
-## Build
+## Settings
 
-1. Clone the repository.
-2. Clone the dependencies in `/lib`.
-3. run `dotnet build -c Release`.
+- **Default user**: The default user to search for when typed `/`.
+- **Github auth token**: The Github auth token to use for better rate limiting. You can generate a token with no scopes.
+
+## Building
+
+1. Clone the repository and the dependencies in `/lib`.
+2. run `dotnet build -c Release`.
+
+## Debugging
+
+1. Clone the repository and the dependencies in `/lib`.
+2. Build the project in `Debug` configuration.
+3. Make sure you have [gsudo](https://github.com/gerardog/gsudo) installed in the path.
+4. Run `debug.ps1` (change `$ptPath` if you have PowerToys installed in a different location).
+5. Attach to the `PowerToys.PowerLauncher` process in Visual Studio.
 
 ## Contributing
 

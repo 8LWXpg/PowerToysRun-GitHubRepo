@@ -2,7 +2,7 @@
   "ID": "47B63DBFBDEE4F9C85EBA5F6CD69E243",
   "ActionKeyword": "gr",
   "IsGlobal": false,
-  "Name": "GithubRepository Search",
+  "Name": "GithubRepo",
   "Author": "8LWXpg",
   "Version": "1.0.0",
   "Language": "csharp",

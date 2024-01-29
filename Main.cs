@@ -22,6 +22,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
         private string? _iconFolderPath;
         private string? _iconFork;
         private string? _iconRepo;
+        private string? _icon;
         private string? _defaultUser;
         private string? _authToken;
 
@@ -30,7 +31,6 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
         // Should only be set in Init()
         private Action? onPluginError;
 
-        private string? _iconPath;
 
         private PluginInitContext? _context;
 
@@ -82,7 +82,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
                     Title = EmptyDescription,
                     SubTitle = string.Format(CultureInfo.CurrentCulture, PluginInBrowserName, BrowserInfo.Name ?? BrowserInfo.MSEdgeName),
                     QueryTextDisplay = string.Empty,
-                    IcoPath = _iconPath,
+                    IcoPath = _icon,
                     ProgramArguments = arguments,
                     Action = action =>
                     {
@@ -101,7 +101,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
             // delay execution for repo query
             if (!search.Contains('/'))
             {
-                return new List<Result>();
+                throw new OperationCanceledException();
             }
 
             if (search.StartsWith('/'))
@@ -113,7 +113,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
                         Title = Resources.plugin_default_user_not_set,
                         SubTitle = Resources.plugin_default_user_not_set_description,
                         QueryTextDisplay = string.Empty,
-                        IcoPath = _iconPath,
+                        IcoPath = _icon,
                         Action = action =>
                         {
                             return true;
@@ -173,7 +173,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
         {
             if (!delayedExecution || query.Search.Contains('/') || string.IsNullOrWhiteSpace(query.Search))
             {
-                return new List<Result>();
+                throw new OperationCanceledException();
             }
 
             List<Result> results = [];
@@ -239,7 +239,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
             return Resources.plugin_description;
         }
 
-        private void OnThemeChanged(Theme oldtheme, Theme newTheme)
+        private void OnThemeChanged(Theme oldTheme, Theme newTheme)
         {
             UpdateIconPath(newTheme);
         }
@@ -248,15 +248,15 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
         {
             if (theme is Theme.Light or Theme.HighContrastWhite)
             {
-                _iconFolderPath = "Images/light";
+                _iconFolderPath = "Images\\light";
             }
             else
             {
-                _iconFolderPath = "Images/dark";
+                _iconFolderPath = "Images\\dark";
             }
-            _iconPath = $"{_iconFolderPath}/Github.png";
-            _iconRepo = $"{_iconFolderPath}/Repo.png";
-            _iconFork = $"{_iconFolderPath}/Fork.png";
+            _icon = $"{_iconFolderPath}\\Github.png";
+            _iconRepo = $"{_iconFolderPath}\\Repo.png";
+            _iconFork = $"{_iconFolderPath}\\Fork.png";
         }
 
         public Control CreateSettingPanel()
@@ -267,7 +267,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
         public void UpdateSettings(PowerLauncherPluginSettings settings)
         {
             _defaultUser = settings?.AdditionalOptions?.FirstOrDefault(x => x.Key == DefaultUser)?.TextValue ?? string.Empty;
-            // TODO: how not to show the auth token in the settings?
+            // TODO: how to hide the auth token in settings?
             _authToken = settings?.AdditionalOptions?.FirstOrDefault(x => x.Key == AuthToken)?.TextValue ?? string.Empty;
             Github.UpdateAuthSetting(_authToken);
         }
