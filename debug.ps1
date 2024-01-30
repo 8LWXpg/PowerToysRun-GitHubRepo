@@ -3,7 +3,7 @@
 Push-Location
 Set-Location $PSScriptRoot
 
-dotnet build -c Debug /p:Platform=x64
+# dotnet build -c Debug /p:Platform=x64
 
 sudo {
 	Start-Job { Stop-Process -Name PowerToys* } | Wait-Job
