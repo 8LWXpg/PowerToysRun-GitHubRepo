@@ -31,7 +31,7 @@ This is a plugin for [PowerToys Run](https://github.com/microsoft/PowerToys/wiki
 ## Settings
 
 - **Default user**: The default user to search for when typed `/`.
-- **Github auth token**: The Github auth token to use for better rate limiting. You can generate a token with no scopes.
+- **Github auth token**: The Github auth token to use for better rate limiting. You can generate a token with no scope.
 
 ## Building
 
