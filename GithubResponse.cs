@@ -104,7 +104,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
             cts?.Cancel();
             cts = new CancellationTokenSource();
 
-            // sort by latest update
+            // sort by latest update, only works if your target is top 30 that recently updated
             return await SendRequest<List<GithubRepo>>($"https://api.github.com/users/{user}/repos?sort=updated", cts.Token);
         }
 
