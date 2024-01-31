@@ -4,7 +4,6 @@
         <useWPF>true</useWPF>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <!-- <EmbeddedResourceUseDependentUponConvention>true</EmbeddedResourceUseDependentUponConvention> -->
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <AssemblyName>Community.PowerToys.Run.Plugin.GithubRepo</AssemblyName>
         <Authors>8LWXpg</Authors>
@@ -27,10 +26,6 @@
         <Optimize>true</Optimize>
         <DebugType>pdbonly</DebugType>
     </PropertyGroup>
-
-    <ItemGroup>
-        <None Remove="PowerToys.exe" />
-    </ItemGroup>
 
     <ItemGroup>
         <Reference Include="PowerToys.Common.UI">
