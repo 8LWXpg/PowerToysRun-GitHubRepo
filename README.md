@@ -1,6 +1,6 @@
 # GithubRepo Plugin for PowerToys Run
 
-This is a plugin for [PowerToys Run](https://github.com/microsoft/PowerToys/wiki/PowerToys-Run-Overview) that allows to search for Github repositories and open them in your browser.
+This is a plugin for [PowerToys Run](https://github.com/microsoft/PowerToys/wiki/PowerToys-Run-Overview) that allows to search for GitHub repositories then open in your default browser.
 
 ## Features
 
