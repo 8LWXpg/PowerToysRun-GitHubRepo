@@ -2,7 +2,7 @@ Push-Location
 Set-Location $PSScriptRoot
 
 $name = 'GithubRepo'
-$assembly = 'Community.PowerToys.Run.Plugin.GithubRepo'
+$assembly = "Community.PowerToys.Run.Plugin.$name"
 $version = "v$((Get-Content ./plugin.json | ConvertFrom-Json).Version)"
 $archs = @('x64', 'arm64')
 
@@ -15,7 +15,7 @@ foreach ($arch in $archs) {
 
 	dotnet build -c Release /p:Platform=$arch
 
-	Remove-Item ./out/GithubRepo/* -Recurse -Force -ErrorAction Ignore
+	Remove-Item "./out/$name/*" -Recurse -Force -ErrorAction Ignore
 	Copy-Item "$releasePath/$assembly.dll", "$releasePath/plugin.json", "$releasePath/Images", "$releasePath/$assembly.deps.json" "./out/$name" -Recurse -Force
 	Compress-Archive "./out/$name" "./out/$name-$version-$arch.zip" -Force
 }

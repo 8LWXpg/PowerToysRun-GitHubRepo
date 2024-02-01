@@ -6,6 +6,7 @@
         <Nullable>enable</Nullable>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <AssemblyName>Community.PowerToys.Run.Plugin.GithubRepo</AssemblyName>
+        <RootNamespace>Community.PowerToys.Run.Plugin.GithubRepo</RootNamespace>
         <Authors>8LWXpg</Authors>
         <Version>$([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory)plugin.json').Split(',')[5].Split(':')[1].Trim().Trim('"'))</Version>
         <Title>Powertoys Run GithubRepo</Title>

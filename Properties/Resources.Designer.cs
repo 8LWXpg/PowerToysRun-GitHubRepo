@@ -8,11 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Community.PowerToys.Run.Plugin.GithubRepo.Properties
-{
+namespace Community.PowerToys.Run.Plugin.GithubRepo.Properties {
     using System;
-
-
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -23,158 +22,130 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo.Properties
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Resources
-    {
-
+    public class Resources {
+        
         private static global::System.Resources.ResourceManager resourceMan;
-
+        
         private static global::System.Globalization.CultureInfo resourceCulture;
-
+        
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resources()
-        {
+        internal Resources() {
         }
-
+        
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager
-        {
-            get
-            {
-                if (object.ReferenceEquals(resourceMan, null))
-                {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("GithubRepo.Properties.Resources", typeof(Resources).Assembly);
+        public static global::System.Resources.ResourceManager ResourceManager {
+            get {
+                if (object.ReferenceEquals(resourceMan, null)) {
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Community.PowerToys.Run.Plugin.GithubRepo.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
             }
         }
-
+        
         /// <summary>
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture
-        {
-            get
-            {
+        public static global::System.Globalization.CultureInfo Culture {
+            get {
                 return resourceCulture;
             }
-            set
-            {
+            set {
                 resourceCulture = value;
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Github authentication token.
         /// </summary>
-        public static string plugin_auth_token
-        {
-            get
-            {
+        public static string plugin_auth_token {
+            get {
                 return ResourceManager.GetString("plugin_auth_token", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Default user for searching.
         /// </summary>
-        public static string plugin_default_user
-        {
-            get
-            {
+        public static string plugin_default_user {
+            get {
                 return ResourceManager.GetString("plugin_default_user", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Default user is not set.
         /// </summary>
-        public static string plugin_default_user_not_set
-        {
-            get
-            {
+        public static string plugin_default_user_not_set {
+            get {
                 return ResourceManager.GetString("plugin_default_user_not_set", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Change in settings.
         /// </summary>
-        public static string plugin_default_user_not_set_description
-        {
-            get
-            {
+        public static string plugin_default_user_not_set_description {
+            get {
                 return ResourceManager.GetString("plugin_default_user_not_set_description", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Search a Github repository.
         /// </summary>
-        public static string plugin_description
-        {
-            get
-            {
+        public static string plugin_description {
+            get {
                 return ResourceManager.GetString("plugin_description", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Open github.com.
         /// </summary>
-        public static string plugin_empty_description
-        {
-            get
-            {
+        public static string plugin_empty_description {
+            get {
                 return ResourceManager.GetString("plugin_empty_description", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to In {0}.
         /// </summary>
-        public static string plugin_in_browser_name
-        {
-            get
-            {
+        public static string plugin_in_browser_name {
+            get {
                 return ResourceManager.GetString("plugin_in_browser_name", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to GithubRepo.
         /// </summary>
-        public static string plugin_name
-        {
-            get
-            {
+        public static string plugin_name {
+            get {
                 return ResourceManager.GetString("plugin_name", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Repositories not found.
         /// </summary>
-        public static string plugin_no_results
-        {
-            get
-            {
+        public static string plugin_no_results {
+            get {
                 return ResourceManager.GetString("plugin_no_results", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Failed to open {0}..
         /// </summary>
-        public static string plugin_search_failed
-        {
-            get
-            {
+        public static string plugin_search_failed {
+            get {
                 return ResourceManager.GetString("plugin_search_failed", resourceCulture);
             }
         }

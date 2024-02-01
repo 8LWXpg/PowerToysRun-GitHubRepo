@@ -165,7 +165,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
             static List<GithubRepo> UserRepoQuery(string search) =>
                 Github.UserRepoQuery(search).Result.Match(
                     ok: r => r,
-                    err: e => new List<GithubRepo> { new(e.GetType().Name, e.Message, string.Empty, false) });
+                    err: e => new List<GithubRepo> { new(e.GetType().Name, string.Empty, e.Message, false) });
         }
 
         // handle repo search with delay
@@ -206,7 +206,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
             static List<GithubRepo> RepoQuery(string search) =>
                 Github.RepoQuery(search).Result.Match(
                     ok: r => r.Items,
-                    err: e => new List<GithubRepo> { new(e.GetType().Name, e.Message, string.Empty, false) });
+                    err: e => new List<GithubRepo> { new(e.GetType().Name, string.Empty, e.Message, false) });
         }
 
         public void Init(PluginInitContext context)
