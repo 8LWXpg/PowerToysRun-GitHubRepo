@@ -7,12 +7,12 @@
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <AssemblyName>Community.PowerToys.Run.Plugin.GithubRepo</AssemblyName>
         <RootNamespace>Community.PowerToys.Run.Plugin.GithubRepo</RootNamespace>
+        <Version>$([System.Text.RegularExpressions.Regex]::Match([System.IO.File]::ReadAllText('.\plugin.json'), '"Version": "(\S+)"').Groups[1].Value)</Version>
+        <Platforms>x64;ARM64</Platforms>
         <Authors>8LWXpg</Authors>
-        <Version>$([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory)plugin.json').Split(',')[5].Split(':')[1].Trim().Trim('"'))</Version>
         <Title>Powertoys Run GithubRepo</Title>
         <Product>Powertoys Run GithubRepo Plugin</Product>
         <RepositoryUrl>https://github.com/8LWXpg/PowerToysRun-GithubRepo</RepositoryUrl>
-        <Platforms>x64;ARM64</Platforms>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)'=='Debug'">

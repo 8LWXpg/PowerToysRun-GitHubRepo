@@ -1,10 +1,11 @@
 {
   "ID": "47B63DBFBDEE4F9C85EBA5F6CD69E243",
   "ActionKeyword": "gr",
+  "Disabled": false,
   "IsGlobal": false,
   "Name": "GithubRepo",
   "Author": "8LWXpg",
-  "Version": "1.0.0",
+  "Version": "1.0.1",
   "Language": "csharp",
   "Website": "https://github.com/8LWXpg/PowerToysRun-GithubRepo",
   "ExecuteFileName": "Community.PowerToys.Run.Plugin.GithubRepo.dll",
