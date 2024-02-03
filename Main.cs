@@ -40,7 +40,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
 
         public string Description => Resources.plugin_description;
 
-        public string EmptyDescription => Resources.plugin_empty_description;
+        public static string EmptyDescription => Resources.plugin_empty_description;
 
         public static string PluginID => "47B63DBFBDEE4F9C85EBA5F6CD69E243";
 
@@ -68,34 +68,33 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
         {
             ArgumentNullException.ThrowIfNull(query);
 
-            List<Result> results = [];
             string search = query.Search;
-            List<GithubRepo>? repos;
-            string target = string.Empty;
 
             // empty query
             if (string.IsNullOrEmpty(search))
             {
                 string arguments = "github.com";
-                results.Add(new Result
-                {
-                    Title = EmptyDescription,
-                    SubTitle = string.Format(CultureInfo.CurrentCulture, PluginInBrowserName, BrowserInfo.Name ?? BrowserInfo.MSEdgeName),
-                    QueryTextDisplay = string.Empty,
-                    IcoPath = _icon,
-                    ProgramArguments = arguments,
-                    Action = action =>
+                return
+                [
+                    new Result
                     {
-                        if (!Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, arguments))
+                        Title = EmptyDescription,
+                        SubTitle = string.Format(CultureInfo.CurrentCulture, PluginInBrowserName, BrowserInfo.Name ?? BrowserInfo.MSEdgeName),
+                        QueryTextDisplay = string.Empty,
+                        IcoPath = _icon,
+                        ProgramArguments = arguments,
+                        Action = action =>
                         {
-                            onPluginError!();
-                            return false;
-                        }
+                            if (!Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, arguments))
+                            {
+                                onPluginError!();
+                                return false;
+                            }
 
-                        return true;
-                    },
-                });
-                return results;
+                            return true;
+                        },
+                    }
+                ];
             }
 
             // delay execution for repo query
@@ -104,26 +103,31 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
                 throw new OperationCanceledException();
             }
 
+            List<GithubRepo> repos;
+            string target;
+
             if (search.StartsWith('/'))
             {
                 if (string.IsNullOrEmpty(_defaultUser))
                 {
-                    results.Add(new Result
-                    {
-                        Title = Resources.plugin_default_user_not_set,
-                        SubTitle = Resources.plugin_default_user_not_set_description,
-                        QueryTextDisplay = string.Empty,
-                        IcoPath = _icon,
-                        Action = action =>
+                    return
+                    [
+                        new Result
                         {
-                            return true;
-                        },
-                    });
-                    return results;
+                            Title = Resources.plugin_default_user_not_set,
+                            SubTitle = Resources.plugin_default_user_not_set_description,
+                            QueryTextDisplay = string.Empty,
+                            IcoPath = _icon,
+                            Action = action =>
+                            {
+                                return true;
+                            },
+                        }
+                    ];
                 }
 
                 string cacheKey = _defaultUser;
-                target = $"{_defaultUser}{search}";
+                target = search[1..];
 
                 repos = _cache.GetOrAdd(cacheKey, () => UserRepoQuery(cacheKey));
             }
@@ -132,19 +136,21 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
                 string[] split = search.Split('/', 2);
 
                 string cacheKey = split[0];
-                target = search;
+                target = split[1];
 
                 repos = _cache.GetOrAdd(cacheKey, () => UserRepoQuery(cacheKey));
             }
 
-            foreach (var repo in repos)
+            var results = repos.ConvertAll(repo =>
             {
-                results.Add(new Result
+                var match = StringMatcher.FuzzySearch(target, repo.FullName.Split('/', 2)[1]);
+                return new Result
                 {
                     Title = repo.FullName,
                     SubTitle = repo.Description,
                     QueryTextDisplay = repo.FullName,
                     IcoPath = repo.Fork ? _iconFork : _iconRepo,
+                    Score = match.Score,
                     Action = action =>
                     {
                         if (!Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl))
@@ -155,11 +161,10 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
 
                         return true;
                     },
-                });
-            }
+                };
+            });
 
-            // TODO: other search algorithm
-            results = results.Where(r => r.Title.StartsWith(target, StringComparison.OrdinalIgnoreCase)).ToList();
+            //results = results.Where(r => r.Title.StartsWith(target, StringComparison.OrdinalIgnoreCase)).ToList();
             return results;
 
             static List<GithubRepo> UserRepoQuery(string search) =>
@@ -176,13 +181,9 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
                 throw new OperationCanceledException();
             }
 
-            List<Result> results = [];
-
-            var repos = RepoQuery(query.Search);
-
-            foreach (var repo in repos)
+            return RepoQuery(query.Search).ConvertAll(repo =>
             {
-                results.Add(new Result
+                return new Result
                 {
                     Title = repo.FullName,
                     SubTitle = repo.Description,
@@ -198,10 +199,8 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
 
                         return true;
                     },
-                });
-            }
-
-            return results;
+                };
+            });
 
             static List<GithubRepo> RepoQuery(string search) =>
                 Github.RepoQuery(search).Result.Match(
@@ -246,14 +245,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
 
         private void UpdateIconPath(Theme theme)
         {
-            if (theme is Theme.Light or Theme.HighContrastWhite)
-            {
-                _iconFolderPath = "Images\\light";
-            }
-            else
-            {
-                _iconFolderPath = "Images\\dark";
-            }
+            _iconFolderPath = theme is Theme.Light or Theme.HighContrastWhite ? "Images\\light" : "Images\\dark";
             _icon = $"{_iconFolderPath}\\Github.png";
             _iconRepo = $"{_iconFolderPath}\\Repo.png";
             _iconFork = $"{_iconFolderPath}\\Fork.png";
