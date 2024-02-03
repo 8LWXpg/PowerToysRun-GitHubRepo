@@ -142,27 +142,27 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
             }
 
             var results = repos.ConvertAll(repo =>
-            {
-                var match = StringMatcher.FuzzySearch(target, repo.FullName.Split('/', 2)[1]);
-                return new Result
                 {
-                    Title = repo.FullName,
-                    SubTitle = repo.Description,
-                    QueryTextDisplay = repo.FullName,
-                    IcoPath = repo.Fork ? _iconFork : _iconRepo,
-                    Score = match.Score,
-                    Action = action =>
+                    var match = StringMatcher.FuzzySearch(target, repo.FullName.Split('/', 2)[1]);
+                    return new Result
                     {
-                        if (!Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl))
+                        Title = repo.FullName,
+                        SubTitle = repo.Description,
+                        QueryTextDisplay = repo.FullName,
+                        IcoPath = repo.Fork ? _iconFork : _iconRepo,
+                        Score = match.Score,
+                        Action = action =>
                         {
-                            onPluginError!();
-                            return false;
-                        }
+                            if (!Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl))
+                            {
+                                onPluginError!();
+                                return false;
+                            }
 
-                        return true;
-                    },
-                };
-            });
+                            return true;
+                        },
+                    };
+                });
 
             //results = results.Where(r => r.Title.StartsWith(target, StringComparison.OrdinalIgnoreCase)).ToList();
             return results;
@@ -222,9 +222,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
                 string errorMsgString = string.Format(CultureInfo.CurrentCulture, ErrorMsgFormat, BrowserInfo.Name ?? BrowserInfo.MSEdgeName);
 
                 Log.Error(errorMsgString, GetType());
-                _context.API.ShowMsg(
-                    $"Plugin: {Resources.plugin_name}",
-                    errorMsgString);
+                _context.API.ShowMsg($"Plugin: {Resources.plugin_name}", errorMsgString);
             };
         }
 
