@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Text;
 using System.Windows.Controls;
-using Community.PowerToys.Run.Plugin.GithubRepo.Properties;
+using Community.PowerToys.Run.Plugin.GitHubRepo.Properties;
 using LazyCache;
 using ManagedCommon;
 using Microsoft.PowerToys.Settings.UI.Library;
@@ -10,7 +10,7 @@ using Wox.Plugin;
 using Wox.Plugin.Logger;
 using BrowserInfo = Wox.Plugin.Common.DefaultBrowserInfo;
 
-namespace Community.PowerToys.Run.Plugin.GithubRepo
+namespace Community.PowerToys.Run.Plugin.GitHubRepo
 {
     public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable, IDisposable, IDelayedExecutionPlugin
     {
@@ -103,7 +103,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
                 throw new OperationCanceledException();
             }
 
-            List<GithubRepo> repos;
+            List<GitHubRepo> repos;
             string target;
 
             if (search.StartsWith('/'))
@@ -167,10 +167,10 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
             //results = results.Where(r => r.Title.StartsWith(target, StringComparison.OrdinalIgnoreCase)).ToList();
             return results;
 
-            static List<GithubRepo> UserRepoQuery(string search) =>
-                Github.UserRepoQuery(search).Result.Match(
+            static List<GitHubRepo> UserRepoQuery(string search) =>
+                GitHub.UserRepoQuery(search).Result.Match(
                     ok: r => r,
-                    err: e => new List<GithubRepo> { new(e.GetType().Name, string.Empty, e.Message, false) });
+                    err: e => new List<GitHubRepo> { new(e.GetType().Name, string.Empty, e.Message, false) });
         }
 
         // handle repo search with delay
@@ -202,10 +202,10 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
                 };
             });
 
-            static List<GithubRepo> RepoQuery(string search) =>
-                Github.RepoQuery(search).Result.Match(
+            static List<GitHubRepo> RepoQuery(string search) =>
+                GitHub.RepoQuery(search).Result.Match(
                     ok: r => r.Items,
-                    err: e => new List<GithubRepo> { new(e.GetType().Name, string.Empty, e.Message, false) });
+                    err: e => new List<GitHubRepo> { new(e.GetType().Name, string.Empty, e.Message, false) });
         }
 
         public void Init(PluginInitContext context)
@@ -244,7 +244,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
         private void UpdateIconPath(Theme theme)
         {
             _iconFolderPath = theme is Theme.Light or Theme.HighContrastWhite ? "Images\\light" : "Images\\dark";
-            _icon = $"{_iconFolderPath}\\Github.png";
+            _icon = $"{_iconFolderPath}\\GitHub.png";
             _iconRepo = $"{_iconFolderPath}\\Repo.png";
             _iconFork = $"{_iconFolderPath}\\Fork.png";
         }
@@ -259,7 +259,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
             _defaultUser = settings?.AdditionalOptions?.FirstOrDefault(x => x.Key == DefaultUser)?.TextValue ?? string.Empty;
             // TODO: how to hide the auth token in settings?
             _authToken = settings?.AdditionalOptions?.FirstOrDefault(x => x.Key == AuthToken)?.TextValue ?? string.Empty;
-            Github.UpdateAuthSetting(_authToken);
+            GitHub.UpdateAuthSetting(_authToken);
         }
 
         public void ReloadData()

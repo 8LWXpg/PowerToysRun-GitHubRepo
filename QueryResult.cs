@@ -1,4 +1,4 @@
-﻿namespace Community.PowerToys.Run.Plugin.GithubRepo
+﻿namespace Community.PowerToys.Run.Plugin.GitHubRepo
 {
     public class QueryResult<T, E>
     {

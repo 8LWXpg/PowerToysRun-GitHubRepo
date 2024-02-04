@@ -3,12 +3,12 @@
   "ActionKeyword": "gr",
   "Disabled": false,
   "IsGlobal": false,
-  "Name": "GithubRepo",
+  "Name": "GitHubRepo",
   "Author": "8LWXpg",
   "Version": "1.0.1",
   "Language": "csharp",
-  "Website": "https://github.com/8LWXpg/PowerToysRun-GithubRepo",
-  "ExecuteFileName": "Community.PowerToys.Run.Plugin.GithubRepo.dll",
-  "IcoPathDark": "Images\\dark\\Github.png",
-  "IcoPathLight": "Images\\light\\Github.png"
+  "Website": "https://github.com/8LWXpg/PowerToysRun-GitHubRepo",
+  "ExecuteFileName": "Community.PowerToys.Run.Plugin.GitHubRepo.dll",
+  "IcoPathDark": "Images\\dark\\GitHub.png",
+  "IcoPathLight": "Images\\light\\GitHub.png"
 }

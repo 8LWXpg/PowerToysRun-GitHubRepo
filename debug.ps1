@@ -10,10 +10,10 @@ sudo {
 
 	$ptPath = 'C:\Program Files\PowerToys'
 	$debug = '.\bin\x64\Debug\net8.0-windows'
-	$dest = "$env:LOCALAPPDATA\Microsoft\PowerToys\PowerToys Run\Plugins\GithubRepo"
+	$dest = "$env:LOCALAPPDATA\Microsoft\PowerToys\PowerToys Run\Plugins\GitHubRepo"
 	$files = @(
-		'Community.PowerToys.Run.Plugin.GithubRepo.deps.json',
-		'Community.PowerToys.Run.Plugin.GithubRepo.dll',
+		'Community.PowerToys.Run.Plugin.GitHubRepo.deps.json',
+		'Community.PowerToys.Run.Plugin.GitHubRepo.dll',
 		'plugin.json',
 		'Images'
 	)

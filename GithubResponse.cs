@@ -4,20 +4,20 @@ using System.Text.Json.Serialization;
 using System.Text.Json;
 using Wox.Plugin.Logger;
 
-namespace Community.PowerToys.Run.Plugin.GithubRepo
+namespace Community.PowerToys.Run.Plugin.GitHubRepo
 {
-    public record GithubResponse
+    public record GitHubResponse
     {
         [JsonPropertyName("items")]
-        public List<GithubRepo> Items { get; init; }
+        public List<GitHubRepo> Items { get; init; }
 
-        public GithubResponse(List<GithubRepo> items)
+        public GitHubResponse(List<GitHubRepo> items)
         {
             Items = items;
         }
     }
 
-    public record GithubRepo
+    public record GitHubRepo
     {
         [JsonPropertyName("full_name")]
         public string FullName { get; init; }
@@ -31,7 +31,7 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
         [JsonPropertyName("fork")]
         public bool Fork { get; init; }
 
-        public GithubRepo(string fullName, string htmlUrl, string description, bool fork)
+        public GitHubRepo(string fullName, string htmlUrl, string description, bool fork)
         {
             FullName = fullName;
             HtmlUrl = htmlUrl;
@@ -40,14 +40,14 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
         }
     }
 
-    public static class Github
+    public static class GitHub
     {
         private static readonly HttpClient Client;
 
         // Used to cancel the request if the user types a new query
         private static CancellationTokenSource? cts;
 
-        static Github()
+        static GitHub()
         {
             Client = new HttpClient();
             Client.DefaultRequestHeaders.UserAgent.Add(ProductInfoHeaderValue.Parse("PowerToys"));
@@ -68,21 +68,21 @@ namespace Community.PowerToys.Run.Plugin.GithubRepo
             }
         }
 
-        public static async Task<QueryResult<GithubResponse, Exception>> RepoQuery(string query)
+        public static async Task<QueryResult<GitHubResponse, Exception>> RepoQuery(string query)
         {
             cts?.Cancel();
             cts = new CancellationTokenSource();
 
-            return await SendRequest<GithubResponse>($"https://api.github.com/search/repositories?q={query}", cts.Token);
+            return await SendRequest<GitHubResponse>($"https://api.github.com/search/repositories?q={query}", cts.Token);
         }
 
-        public static async Task<QueryResult<List<GithubRepo>, Exception>> UserRepoQuery(string user)
+        public static async Task<QueryResult<List<GitHubRepo>, Exception>> UserRepoQuery(string user)
         {
             cts?.Cancel();
             cts = new CancellationTokenSource();
 
             // sort by latest update, only works if your target is top 30 that recently updated
-            return await SendRequest<List<GithubRepo>>($"https://api.github.com/users/{user}/repos?sort=updated", cts.Token);
+            return await SendRequest<List<GitHubRepo>>($"https://api.github.com/users/{user}/repos?sort=updated", cts.Token);
         }
 
         private static async Task<QueryResult<T, Exception>> SendRequest<T>(string url, CancellationToken token)
