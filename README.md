@@ -1,10 +1,10 @@
 # GithubRepo Plugin for PowerToys Run
 
-This is a plugin for [PowerToys Run](https://github.com/microsoft/PowerToys/wiki/PowerToys-Run-Overview) that allows to search for GitHub repositories then open in your default browser.
+This is a plugin for [PowerToys Run](https://aka.ms/PowerToysOverview_PowerToysRun) that allows to search for GitHub repositories then open in your default browser.
 
 ## Features
 
-### Search repo with query: `qurey`
+### Search repo with query: `query`
 
 ![Search repo with query](./assets/repo.png)
 
@@ -31,7 +31,7 @@ This is a plugin for [PowerToys Run](https://github.com/microsoft/PowerToys/wiki
 ## Settings
 
 - **Default user**: The default user to search for when typed `/`.
-- **Github auth token**: The Github auth token to use for better rate limiting. You can generate a token with no scope.
+- **Github auth token** (optional): The Github auth token to use for better rate limiting. You can generate a token with no scope. Detailed instructions [here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic).
 
 ## Building
 
