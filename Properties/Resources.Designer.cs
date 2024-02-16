@@ -142,7 +142,7 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Open issues.
+        ///   Looks up a localized string similar to Open issues (Ctrl+1).
         /// </summary>
         public static string plugin_open_issues {
             get {
@@ -151,7 +151,7 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Open pull requests.
+        ///   Looks up a localized string similar to Open pull requests (Ctrl+2).
         /// </summary>
         public static string plugin_open_pull_requests {
             get {

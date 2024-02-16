@@ -146,10 +146,10 @@
     <value>Repositories not found</value>
   </data>
   <data name="plugin_open_issues" xml:space="preserve">
-    <value>Open issues</value>
+    <value>Open issues (Ctrl+1)</value>
   </data>
   <data name="plugin_open_pull_requests" xml:space="preserve">
-    <value>Open pull requests</value>
+    <value>Open pull requests (Ctrl+2)</value>
   </data>
   <data name="plugin_search_failed" xml:space="preserve">
     <value>Failed to open {0}.</value>
