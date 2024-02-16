@@ -29,6 +29,9 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo
 
         private CachingService? _cache;
 
+        // additional data for context menu
+        private record ResultData(string Url);
+
         // Should only be set in Init()
         private Action? onPluginError;
 
@@ -143,27 +146,28 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo
             }
 
             var results = repos.ConvertAll(repo =>
+            {
+                var match = StringMatcher.FuzzySearch(target, repo.FullName.Split('/', 2)[1]);
+                return new Result
                 {
-                    var match = StringMatcher.FuzzySearch(target, repo.FullName.Split('/', 2)[1]);
-                    return new Result
+                    Title = repo.FullName,
+                    SubTitle = repo.Description,
+                    QueryTextDisplay = repo.FullName,
+                    IcoPath = repo.Fork ? _iconFork : _iconRepo,
+                    Score = match.Score,
+                    ContextData = new ResultData(repo.HtmlUrl),
+                    Action = action =>
                     {
-                        Title = repo.FullName,
-                        SubTitle = repo.Description,
-                        QueryTextDisplay = repo.FullName,
-                        IcoPath = repo.Fork ? _iconFork : _iconRepo,
-                        Score = match.Score,
-                        Action = action =>
+                        if (!Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl))
                         {
-                            if (!Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl))
-                            {
-                                onPluginError!();
-                                return false;
-                            }
+                            onPluginError!();
+                            return false;
+                        }
 
-                            return true;
-                        },
-                    };
-                });
+                        return true;
+                    },
+                };
+            });
 
             //results = results.Where(r => r.Title.StartsWith(target, StringComparison.OrdinalIgnoreCase)).ToList();
             return results;
@@ -190,6 +194,7 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo
                     SubTitle = repo.Description,
                     QueryTextDisplay = repo.FullName,
                     IcoPath = repo.Fork ? _iconFork : _iconRepo,
+                    ContextData = new ResultData(repo.HtmlUrl),
                     Action = action =>
                     {
                         if (!Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl))
@@ -211,9 +216,14 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo
 
         public List<ContextMenuResult> LoadContextMenus(Result selectedResult)
         {
-            var fullName = selectedResult.Title;
-            var issue = $"https://github.com/{fullName}/issues";
-            var pr = $"https://github.com/{fullName}/pulls";
+            if (selectedResult.ContextData is not ResultData selectedData)
+            {
+                return new List<ContextMenuResult>();
+            }
+
+            var url = selectedData.Url;
+            var issue = $"{url}/issues";
+            var pr = $"{url}/pulls";
             return [
                 new ContextMenuResult
                 {
