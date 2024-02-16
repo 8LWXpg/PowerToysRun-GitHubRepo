@@ -10,8 +10,8 @@
 
 namespace Community.PowerToys.Run.Plugin.GitHubRepo.Properties {
     using System;
-
-
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -23,15 +23,15 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo.Properties {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
-
+        
         private static global::System.Resources.ResourceManager resourceMan;
-
+        
         private static global::System.Globalization.CultureInfo resourceCulture;
-
+        
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal Resources() {
         }
-
+        
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
@@ -45,7 +45,7 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo.Properties {
                 return resourceMan;
             }
         }
-
+        
         /// <summary>
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
@@ -59,7 +59,7 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo.Properties {
                 resourceCulture = value;
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to GitHub authentication token.
         /// </summary>
@@ -68,7 +68,7 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo.Properties {
                 return ResourceManager.GetString("plugin_auth_token", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Default user for searching.
         /// </summary>
@@ -77,7 +77,7 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo.Properties {
                 return ResourceManager.GetString("plugin_default_user", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Default user is not set.
         /// </summary>
@@ -86,7 +86,7 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo.Properties {
                 return ResourceManager.GetString("plugin_default_user_not_set", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Change in settings.
         /// </summary>
@@ -95,7 +95,7 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo.Properties {
                 return ResourceManager.GetString("plugin_default_user_not_set_description", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Search a GitHub repository.
         /// </summary>
@@ -104,7 +104,7 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo.Properties {
                 return ResourceManager.GetString("plugin_description", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Open github.com.
         /// </summary>
@@ -113,7 +113,7 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo.Properties {
                 return ResourceManager.GetString("plugin_empty_description", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to In {0}.
         /// </summary>
@@ -122,7 +122,7 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo.Properties {
                 return ResourceManager.GetString("plugin_in_browser_name", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to GitHubRepo.
         /// </summary>
@@ -131,7 +131,7 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo.Properties {
                 return ResourceManager.GetString("plugin_name", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Repositories not found.
         /// </summary>
@@ -140,7 +140,25 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo.Properties {
                 return ResourceManager.GetString("plugin_no_results", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open issues.
+        /// </summary>
+        public static string plugin_open_issues {
+            get {
+                return ResourceManager.GetString("plugin_open_issues", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open pull requests.
+        /// </summary>
+        public static string plugin_open_pull_requests {
+            get {
+                return ResourceManager.GetString("plugin_open_pull_requests", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Failed to open {0}..
         /// </summary>

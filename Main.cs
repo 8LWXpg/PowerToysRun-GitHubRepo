@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text;
 using System.Windows.Controls;
+using System.Windows.Input;
 using Community.PowerToys.Run.Plugin.GitHubRepo.Properties;
 using LazyCache;
 using ManagedCommon;
@@ -12,7 +13,7 @@ using BrowserInfo = Wox.Plugin.Common.DefaultBrowserInfo;
 
 namespace Community.PowerToys.Run.Plugin.GitHubRepo
 {
-    public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable, IDisposable, IDelayedExecutionPlugin
+    public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable, IDisposable, IDelayedExecutionPlugin, IContextMenu
     {
         private static readonly CompositeFormat ErrorMsgFormat = CompositeFormat.Parse(Resources.plugin_search_failed);
         private static readonly CompositeFormat PluginInBrowserName = CompositeFormat.Parse(Resources.plugin_in_browser_name);
@@ -206,6 +207,53 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo
                 GitHub.RepoQuery(search).Result.Match(
                     ok: r => r.Items,
                     err: e => new List<GitHubRepo> { new(e.GetType().Name, string.Empty, e.Message, false) });
+        }
+
+        public List<ContextMenuResult> LoadContextMenus(Result selectedResult)
+        {
+            var fullName = selectedResult.Title;
+            var issue = $"https://github.com/{fullName}/issues";
+            var pr = $"https://github.com/{fullName}/pulls";
+            return [
+                new ContextMenuResult
+                {
+                    PluginName = Name,
+                    Title = Resources.plugin_open_issues,
+                    Glyph = "\xE958",
+                    FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                    AcceleratorKey = Key.D1,
+                    AcceleratorModifiers = ModifierKeys.Control,
+                    Action = _ =>
+                    {
+                        if (!Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, issue))
+                        {
+                            onPluginError!();
+                            return false;
+                        }
+
+                        return true;
+                    },
+                },
+                new ContextMenuResult
+                {
+                    PluginName = Name,
+                    Title = Resources.plugin_open_pull_requests,
+                    Glyph = "\xF003",
+                    FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+                    AcceleratorKey = Key.D2,
+                    AcceleratorModifiers = ModifierKeys.Control,
+                    Action = _ =>
+                    {
+                        if (!Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, pr))
+                        {
+                            onPluginError!();
+                            return false;
+                        }
+
+                        return true;
+                    },
+                },
+            ];
         }
 
         public void Init(PluginInitContext context)
