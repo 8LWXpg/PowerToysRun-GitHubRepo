@@ -16,6 +16,11 @@ This is a plugin for [PowerToys Run](https://aka.ms/PowerToysOverview_PowerToysR
 
 ![Search repo with default user](./assets/default_user.png)
 
+### Context menu
+
+- **Open issues**: Open the issues page of the repository <kbd>Ctrl+1</kbd>.
+- **Open pull requests**: Open the pull requests page of the repository <kbd>Ctrl+2</kbd>.
+
 ## Installation
 
 1. Download the latest release of the from the releases page.
