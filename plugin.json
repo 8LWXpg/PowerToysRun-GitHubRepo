@@ -3,7 +3,7 @@
   "ActionKeyword": "gr",
   "Disabled": false,
   "IsGlobal": false,
-  "Name": "GitHubRepo",
+  "Name": "GitHub Repository",
   "Author": "8LWXpg",
   "Version": "1.2.1",
   "Language": "csharp",
