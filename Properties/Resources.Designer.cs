@@ -124,7 +124,7 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to GitHubRepo.
+        ///   Looks up a localized string similar to GitHub Repository.
         /// </summary>
         public static string plugin_name {
             get {
