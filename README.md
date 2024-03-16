@@ -14,6 +14,8 @@ This is a plugin for [PowerToys Run](https://aka.ms/PowerToysOverview_PowerToysR
 
 ### Search repo with default user: `/repo`
 
+If authtoken is set, it will list all the repositories the token has access to. Otherwise,
+it will list all the public repositories of the default user.
 ![Search repo with default user](./assets/default_user.png)
 
 ### Context menu
@@ -36,7 +38,9 @@ This is a plugin for [PowerToys Run](https://aka.ms/PowerToysOverview_PowerToysR
 ## Settings
 
 - **Default user**: The default user to search for when typed `/`.
-- **GitHub auth token** (optional): The GitHub auth token to use for better rate limiting. You can generate a token with no scope. Detailed instructions [here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic).
+- **GitHub auth token** (optional): The GitHub auth token to use for better rate limiting and access to private repo.    
+  You can generate a fine-grained token with read access to metadata. Detailed instructions 
+  [here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token).
 
 ## Building
 

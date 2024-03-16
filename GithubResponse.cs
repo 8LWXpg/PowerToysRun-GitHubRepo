@@ -1,7 +1,11 @@
+// Copyright (c) Microsoft Corporation
+// The Microsoft Corporation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text.Json.Serialization;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Wox.Plugin.Logger;
 
 namespace Community.PowerToys.Run.Plugin.GitHubRepo
@@ -83,6 +87,17 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo
 
             // sort by latest update, only works if your target is top 30 that recently updated
             return await SendRequest<List<GitHubRepo>>($"https://api.github.com/users/{user}/repos?sort=updated", cts.Token);
+        }
+
+        public static async Task<QueryResult<List<GitHubRepo>, Exception>> DefaultUserRepoQuery(string user)
+        {
+            cts?.Cancel();
+            cts = new CancellationTokenSource();
+
+            // fallback to UserRepoQuery if authtoken is not set
+            return Client.DefaultRequestHeaders.Contains("Authorization") ?
+                await SendRequest<List<GitHubRepo>>("https://api.github.com/user/repos?sort=updated", cts.Token) :
+                await UserRepoQuery(user);
         }
 
         private static async Task<QueryResult<T, Exception>> SendRequest<T>(string url, CancellationToken token)

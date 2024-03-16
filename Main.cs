@@ -1,11 +1,15 @@
-using System.Globalization;
-using System.Text;
-using System.Windows.Controls;
-using System.Windows.Input;
+// Copyright (c) Microsoft Corporation
+// The Microsoft Corporation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using Community.PowerToys.Run.Plugin.GitHubRepo.Properties;
 using LazyCache;
 using ManagedCommon;
 using Microsoft.PowerToys.Settings.UI.Library;
+using System.Globalization;
+using System.Text;
+using System.Windows.Controls;
+using System.Windows.Input;
 using Wox.Infrastructure;
 using Wox.Plugin;
 using Wox.Plugin.Logger;
@@ -67,7 +71,7 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo
             },
         };
 
-        // handle user repo search
+        // handle user repo user
         public List<Result> Query(Query query)
         {
             ArgumentNullException.ThrowIfNull(query);
@@ -133,7 +137,7 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo
                 string cacheKey = _defaultUser;
                 target = search[1..];
 
-                repos = _cache.GetOrAdd(cacheKey, () => UserRepoQuery(cacheKey));
+                repos = _cache.GetOrAdd(cacheKey, () => DefaultUserRepoQuery(cacheKey));
             }
             else
             {
@@ -172,8 +176,13 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo
             //results = results.Where(r => r.Title.StartsWith(target, StringComparison.OrdinalIgnoreCase)).ToList();
             return results;
 
-            static List<GitHubRepo> UserRepoQuery(string search) =>
-                GitHub.UserRepoQuery(search).Result.Match(
+            static List<GitHubRepo> UserRepoQuery(string user) =>
+                GitHub.UserRepoQuery(user).Result.Match(
+                    ok: r => r,
+                    err: e => new List<GitHubRepo> { new(e.GetType().Name, string.Empty, e.Message, false) });
+
+            static List<GitHubRepo> DefaultUserRepoQuery(string user) =>
+                GitHub.DefaultUserRepoQuery(user).Result.Match(
                     ok: r => r,
                     err: e => new List<GitHubRepo> { new(e.GetType().Name, string.Empty, e.Message, false) });
         }
