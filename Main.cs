@@ -240,7 +240,7 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo
                     Title = Resources.plugin_open_issues,
                     Glyph = "\xE958",
                     FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
-                    AcceleratorKey = Key.D1,
+                    AcceleratorKey = Key.I,
                     AcceleratorModifiers = ModifierKeys.Control,
                     Action = _ =>
                     {
@@ -259,7 +259,7 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo
                     Title = Resources.plugin_open_pull_requests,
                     Glyph = "\xF003",
                     FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
-                    AcceleratorKey = Key.D2,
+                    AcceleratorKey = Key.P,
                     AcceleratorModifiers = ModifierKeys.Control,
                     Action = _ =>
                     {

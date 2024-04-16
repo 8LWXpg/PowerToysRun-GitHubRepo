@@ -20,8 +20,8 @@ it will list all the public repositories of the default user.
 
 ### Context menu
 
-- **Open issues**: Open the issues page of the repository <kbd>Ctrl+1</kbd>.
-- **Open pull requests**: Open the pull requests page of the repository <kbd>Ctrl+2</kbd>.
+- **Open issues**: Open the issues page of the repository <kbd>Ctrl+I</kbd>.
+- **Open pull requests**: Open the pull requests page of the repository <kbd>Ctrl+P</kbd>.
 
 ## Installation
 
