@@ -1,7 +1,3 @@
-// Copyright (c) Microsoft Corporation
-// The Microsoft Corporation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-
 using Community.PowerToys.Run.Plugin.GitHubRepo.Properties;
 using LazyCache;
 using ManagedCommon;
@@ -38,7 +34,6 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo
 
         // Should only be set in Init()
         private Action? onPluginError;
-
 
         private PluginInitContext? _context;
 
@@ -149,9 +144,9 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo
                 repos = _cache.GetOrAdd(cacheKey, () => UserRepoQuery(cacheKey));
             }
 
-            var results = repos.ConvertAll(repo =>
+            List<Result> results = repos.ConvertAll(repo =>
             {
-                var match = StringMatcher.FuzzySearch(target, repo.FullName.Split('/', 2)[1]);
+                MatchResult match = StringMatcher.FuzzySearch(target, repo.FullName.Split('/', 2)[1]);
                 return new Result
                 {
                     Title = repo.FullName,
@@ -176,26 +171,27 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo
             //results = results.Where(r => r.Title.StartsWith(target, StringComparison.OrdinalIgnoreCase)).ToList();
             return results;
 
-            static List<GitHubRepo> UserRepoQuery(string user) =>
-                GitHub.UserRepoQuery(user).Result.Match(
+            static List<GitHubRepo> UserRepoQuery(string user)
+            {
+                return GitHub.UserRepoQuery(user).Result.Match(
                     ok: r => r,
-                    err: e => new List<GitHubRepo> { new(e.GetType().Name, string.Empty, e.Message, false) });
+                    err: e => [new(e.GetType().Name, string.Empty, e.Message, false)]);
+            }
 
-            static List<GitHubRepo> DefaultUserRepoQuery(string user) =>
-                GitHub.DefaultUserRepoQuery(user).Result.Match(
+            static List<GitHubRepo> DefaultUserRepoQuery(string user)
+            {
+                return GitHub.DefaultUserRepoQuery(user).Result.Match(
                     ok: r => r,
-                    err: e => new List<GitHubRepo> { new(e.GetType().Name, string.Empty, e.Message, false) });
+                    err: e => [new(e.GetType().Name, string.Empty, e.Message, false)]);
+            }
         }
 
         // handle repo search with delay
         public List<Result> Query(Query query, bool delayedExecution)
         {
-            if (!delayedExecution || query.Search.Contains('/') || string.IsNullOrWhiteSpace(query.Search))
-            {
-                throw new OperationCanceledException();
-            }
-
-            return RepoQuery(query.Search).ConvertAll(repo =>
+            return !delayedExecution || query.Search.Contains('/') || string.IsNullOrWhiteSpace(query.Search)
+                ? throw new OperationCanceledException()
+                : RepoQuery(query.Search).ConvertAll(repo =>
             {
                 return new Result
                 {
@@ -217,22 +213,24 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo
                 };
             });
 
-            static List<GitHubRepo> RepoQuery(string search) =>
-                GitHub.RepoQuery(search).Result.Match(
+            static List<GitHubRepo> RepoQuery(string search)
+            {
+                return GitHub.RepoQuery(search).Result.Match(
                     ok: r => r.Items,
-                    err: e => new List<GitHubRepo> { new(e.GetType().Name, string.Empty, e.Message, false) });
+                    err: e => [new(e.GetType().Name, string.Empty, e.Message, false)]);
+            }
         }
 
         public List<ContextMenuResult> LoadContextMenus(Result selectedResult)
         {
             if (selectedResult.ContextData is not ResultData selectedData)
             {
-                return new List<ContextMenuResult>();
+                return [];
             }
 
-            var url = selectedData.Url;
-            var issue = $"{url}/issues";
-            var pr = $"{url}/pulls";
+            string url = selectedData.Url;
+            string issue = $"{url}/issues";
+            string pr = $"{url}/pulls";
             return [
                 new ContextMenuResult
                 {
