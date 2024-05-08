@@ -363,5 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # Custom ignore entries
-*.dll
 out/
