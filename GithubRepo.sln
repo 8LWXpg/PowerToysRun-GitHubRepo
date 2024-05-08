@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitHubRepo", "GitHubRepo.csproj", "{C871B744-7232-40A5-9BE2-4D812B8262E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitHubRepo", "GitHubRepo\GitHubRepo.csproj", "{C871B744-7232-40A5-9BE2-4D812B8262E0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5EAAFC82-48C4-4ECE-BF15-1C0E485CA57B}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

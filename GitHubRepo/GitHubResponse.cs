@@ -63,11 +63,11 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo
         {
             if (string.IsNullOrEmpty(auth))
             {
-                Client.DefaultRequestHeaders.Remove("Authorization");
+                _ = Client.DefaultRequestHeaders.Remove("Authorization");
             }
             else
             {
-                Client.DefaultRequestHeaders.Remove("Authorization");
+                _ = Client.DefaultRequestHeaders.Remove("Authorization");
                 Client.DefaultRequestHeaders.Add("Authorization", $"Bearer {auth}");
             }
         }
@@ -106,7 +106,7 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo
             {
                 HttpResponseMessage responseMessage = await Client.GetAsync(url, token);
                 _ = responseMessage.EnsureSuccessStatusCode();
-                string json = await responseMessage.Content.ReadAsStringAsync(token);
+                var json = await responseMessage.Content.ReadAsStringAsync(token);
                 T? response = JsonSerializer.Deserialize<T>(json);
                 return response!;
             }
