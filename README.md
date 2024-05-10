@@ -23,7 +23,7 @@ it will list all the public repositories of the default user.
 - **Open issues**: Open the issues page of the repository <kbd>Ctrl+I</kbd>.
 - **Open pull requests**: Open the pull requests page of the repository <kbd>Ctrl+P</kbd>.
 
-## Settings
+### Settings
 
 - **Default user**: The default user to search for when typed `/`.
 - **GitHub auth token** (optional): The GitHub auth token to use for better rate limiting and access to private repo.
