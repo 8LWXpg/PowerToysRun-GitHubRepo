@@ -23,6 +23,13 @@ it will list all the public repositories of the default user.
 - **Open issues**: Open the issues page of the repository <kbd>Ctrl+I</kbd>.
 - **Open pull requests**: Open the pull requests page of the repository <kbd>Ctrl+P</kbd>.
 
+## Settings
+
+- **Default user**: The default user to search for when typed `/`.
+- **GitHub auth token** (optional): The GitHub auth token to use for better rate limiting and access to private repo.
+  You can generate a fine-grained token with read access to metadata. Detailed instructions 
+  [here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token).
+
 ## Installation
 
 1. Download the latest release of the from the releases page.
@@ -34,13 +41,6 @@ it will list all the public repositories of the default user.
 1. Open PowerToys Run (default shortcut is <kbd>Alt+Space</kbd>).
 2. Type `gr` followed by your search query.
 3. Select a search result and press `Enter` to open it in browser.
-
-## Settings
-
-- **Default user**: The default user to search for when typed `/`.
-- **GitHub auth token** (optional): The GitHub auth token to use for better rate limiting and access to private repo.
-  You can generate a fine-grained token with read access to metadata. Detailed instructions 
-  [here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token).
 
 ## Building
 
