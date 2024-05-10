@@ -4,7 +4,6 @@
         <useWPF>true</useWPF>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <AssemblyName>Community.PowerToys.Run.Plugin.GitHubRepo</AssemblyName>
         <RootNamespace>Community.PowerToys.Run.Plugin.GitHubRepo</RootNamespace>
         <Version>$([System.Text.RegularExpressions.Regex]::Match([System.IO.File]::ReadAllText('.\plugin.json'), '"Version": "(\S+)"').Groups[1].Value)</Version>
