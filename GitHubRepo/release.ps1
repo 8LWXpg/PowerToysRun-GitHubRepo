@@ -18,7 +18,7 @@ foreach ($arch in $archs) {
 	Remove-Item "./out/$name/*" -Recurse -Force -ErrorAction Ignore
 	$items = @(
 		"$releasePath/$assembly.dll",
-		"$releasePath/plugin.json", 
+		"$releasePath/plugin.json",
 		"$releasePath/Images",
 		"$releasePath/$assembly.deps.json"
 	)

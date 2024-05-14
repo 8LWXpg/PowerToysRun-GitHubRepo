@@ -27,7 +27,7 @@ it will list all the public repositories of the default user.
 
 - **Default user**: The default user to search for when typed `/`.
 - **GitHub auth token** (optional): The GitHub auth token to use for better rate limiting and access to private repo.
-  You can generate a fine-grained token with read access to metadata. Detailed instructions 
+  You can generate a fine-grained token with read access to metadata. Detailed instructions
   [here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token).
 
 ## Installation
