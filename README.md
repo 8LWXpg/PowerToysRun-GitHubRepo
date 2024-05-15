@@ -59,4 +59,4 @@ it will list all the public repositories of the default user.
 
 ### Localization
 
-If you want to help localize this plugin, please check the [localization guide](./Localization.md)
+If you want to help localize this plugin, please check the [localization guide](./Localizing.md)
