@@ -6,7 +6,7 @@ Set-Location $PSScriptRoot
 # dotnet build -c Debug /p:Platform=x64
 
 sudo {
-	Start-Job { Stop-Process -Name PowerToys* } | Wait-Job
+	Start-Job { Stop-Process -Name PowerToys* } | Wait-Job > $null
 
 	$ptPath = 'C:\Program Files\PowerToys'
 	$debug = '.\bin\x64\Debug\net8.0-windows'
