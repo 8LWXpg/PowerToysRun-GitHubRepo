@@ -133,15 +133,6 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Repositories not found.
-        /// </summary>
-        public static string plugin_no_results {
-            get {
-                return ResourceManager.GetString("plugin_no_results", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Open issues (Ctrl+I).
         /// </summary>
         public static string plugin_open_issues {
@@ -156,15 +147,6 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo.Properties {
         public static string plugin_open_pull_requests {
             get {
                 return ResourceManager.GetString("plugin_open_pull_requests", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Failed to open {0}..
-        /// </summary>
-        public static string plugin_search_failed {
-            get {
-                return ResourceManager.GetString("plugin_search_failed", resourceCulture);
             }
         }
     }

@@ -15,7 +15,6 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo
 {
 	public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable, IDisposable, IDelayedExecutionPlugin, IContextMenu
 	{
-		private static readonly CompositeFormat ErrorMsgFormat = CompositeFormat.Parse(Resources.plugin_search_failed);
 		private static readonly CompositeFormat PluginInBrowserName = CompositeFormat.Parse(Resources.plugin_in_browser_name);
 		private const string DefaultUser = nameof(DefaultUser);
 		private const string AuthToken = nameof(AuthToken);
@@ -31,9 +30,6 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo
 
 		// additional data for context menu
 		private record ResultData(string Url);
-
-		// Should only be set in Init()
-		private Action? onPluginError;
 
 		private PluginInitContext? _context;
 
@@ -98,7 +94,6 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo
 						{
 							if (!Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, arguments))
 							{
-								onPluginError!();
 								return false;
 							}
 
@@ -164,7 +159,6 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo
 					{
 						if (!Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl))
 						{
-							onPluginError!();
 							return false;
 						}
 
@@ -188,26 +182,28 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo
 		// handle repo search with delay
 		public List<Result> Query(Query query, bool delayedExecution)
 		{
-			return !delayedExecution || query.Search.Contains('/') || string.IsNullOrWhiteSpace(query.Search)
-				? throw new OperationCanceledException()
-				: RepoQuery(query.Search).ConvertAll(repo => new Result
-				{
-					Title = repo.FullName,
-					SubTitle = repo.Description,
-					QueryTextDisplay = repo.FullName,
-					IcoPath = repo.Fork ? _iconFork : _iconRepo,
-					ContextData = new ResultData(repo.HtmlUrl),
-					Action = action =>
-					{
-						if (!Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl))
-						{
-							onPluginError!();
-							return false;
-						}
+			if (!delayedExecution || query.Search.Contains('/') || string.IsNullOrWhiteSpace(query.Search))
+			{
+				throw new OperationCanceledException();
+			}
 
-						return true;
-					},
-				});
+			return RepoQuery(query.Search).ConvertAll(repo => new Result
+			{
+				Title = repo.FullName,
+				SubTitle = repo.Description,
+				QueryTextDisplay = repo.FullName,
+				IcoPath = repo.Fork ? _iconFork : _iconRepo,
+				ContextData = new ResultData(repo.HtmlUrl),
+				Action = action =>
+				{
+					if (!Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl))
+					{
+						return false;
+					}
+
+					return true;
+				},
+			});
 
 			static List<GitHubRepo> RepoQuery(string search) => GitHub.RepoQuery(search).Result.Match(
 					ok: r => r.Items,
@@ -237,7 +233,6 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo
 					{
 						if (!Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, issue))
 						{
-							onPluginError!();
 							return false;
 						}
 
@@ -256,7 +251,6 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo
 					{
 						if (!Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, pr))
 						{
-							onPluginError!();
 							return false;
 						}
 
@@ -274,14 +268,6 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo
 			_cache.DefaultCachePolicy.DefaultCacheDurationSeconds = (int)TimeSpan.FromMinutes(1).TotalSeconds;
 			UpdateIconPath(_context.API.GetCurrentTheme());
 			BrowserInfo.UpdateIfTimePassed();
-
-			onPluginError = () =>
-			{
-				var errorMsgString = string.Format(CultureInfo.CurrentCulture, ErrorMsgFormat, BrowserInfo.Name ?? BrowserInfo.MSEdgeName);
-
-				Log.Error(errorMsgString, GetType());
-				_context.API.ShowMsg($"Plugin: {Resources.plugin_name}", errorMsgString);
-			};
 		}
 
 		public string GetTranslatedPluginTitle()
