@@ -136,7 +136,7 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 			repos = _cache.GetOrAdd(cacheKey, () => UserRepoQuery(cacheKey));
 		}
 
-		var results = repos.ConvertAll(repo =>
+		List<Result> results = repos.ConvertAll(repo =>
 		{
 			MatchResult match = StringMatcher.FuzzySearch(target, repo.FullName.Split('/', 2)[1]);
 			return new Result
@@ -149,17 +149,17 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 				ContextData = new ResultData(repo.HtmlUrl),
 				Action = action => Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl),
 			};
-		}).Where(r => r.Score > 0).ToList();
+		});
 
-		return results;
+		return string.IsNullOrEmpty(target) ? results : results.Where(r => r.Score > 0).ToList();
 
 		static List<GitHubRepo> UserRepoQuery(string user) => GitHub.UserRepoQuery(user).Result.Match(
-				ok: r => r,
-				err: e => [new(e.GetType().Name, string.Empty, e.Message, false)]);
+			ok: r => r,
+			err: e => [new(e.GetType().Name, string.Empty, e.Message, false)]);
 
 		static List<GitHubRepo> DefaultUserRepoQuery(string user) => GitHub.DefaultUserRepoQuery(user).Result.Match(
-				ok: r => r,
-				err: e => [new(e.GetType().Name, string.Empty, e.Message, false)]);
+			ok: r => r,
+			err: e => [new(e.GetType().Name, string.Empty, e.Message, false)]);
 	}
 
 	// handle repo search with delay
