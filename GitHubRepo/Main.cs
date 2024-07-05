@@ -102,6 +102,7 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 		}
 
 		List<GitHubRepo> repos;
+		string user;
 		string target;
 
 		if (search.StartsWith('/'))
@@ -121,37 +122,62 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 				];
 			}
 
-			var cacheKey = _defaultUser;
+			user = _defaultUser;
 			target = search[1..];
 
-			repos = _cache.GetOrAdd(cacheKey, () => DefaultUserRepoQuery(cacheKey));
+			repos = _cache.GetOrAdd(user, () => DefaultUserRepoQuery(user));
 		}
 		else
 		{
 			var split = search.Split('/', 2);
 
-			var cacheKey = split[0];
+			user = split[0];
 			target = split[1];
 
-			repos = _cache.GetOrAdd(cacheKey, () => UserRepoQuery(cacheKey));
+			repos = _cache.GetOrAdd(user, () => UserRepoQuery(user));
 		}
 
-		List<Result> results = repos.ConvertAll(repo =>
+		if (string.IsNullOrEmpty(target))
 		{
-			MatchResult match = StringMatcher.FuzzySearch(target, repo.FullName.Split('/', 2)[1]);
-			return new Result
+			return repos.ConvertAll(repo => new Result
 			{
 				Title = repo.FullName,
 				SubTitle = repo.Description,
-				QueryTextDisplay = repo.FullName,
+				QueryTextDisplay = search,
 				IcoPath = repo.Fork ? _iconFork : _iconRepo,
-				Score = match.Score,
 				ContextData = new ResultData(repo.HtmlUrl),
 				Action = action => Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl),
-			};
-		});
+			});
+		}
 
-		return string.IsNullOrEmpty(target) ? results : results.Where(r => r.Score > 0).ToList();
+		List<Result> results = [];
+		foreach (GitHubRepo repo in repos)
+		{
+			MatchResult match = StringMatcher.FuzzySearch(target, repo.FullName.Split('/', 2)[1]);
+			if (match.Score <= 0)
+			{
+				continue;
+			}
+
+			for (var i = 0; i < match.MatchData.Count; i++)
+			{
+				match.MatchData[i] += user.Length + 1;
+			}
+
+			results.Add(new Result
+			{
+				Title = repo.FullName,
+				SubTitle = repo.Description,
+				QueryTextDisplay = search,
+				IcoPath = repo.Fork ? _iconFork : _iconRepo,
+				Score = match.Score,
+				TitleHighlightData = match.MatchData,
+				ContextData = new ResultData(repo.HtmlUrl),
+				Action = action => Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl),
+			});
+		}
+
+		return results;
 
 		static List<GitHubRepo> UserRepoQuery(string user) => GitHub.UserRepoQuery(user).Result.Match(
 			ok: r => r,
@@ -171,7 +197,7 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 			{
 				Title = repo.FullName,
 				SubTitle = repo.Description,
-				QueryTextDisplay = repo.FullName,
+				QueryTextDisplay = query.Search,
 				IcoPath = repo.Fork ? _iconFork : _iconRepo,
 				ContextData = new ResultData(repo.HtmlUrl),
 				Action = action => Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl),
