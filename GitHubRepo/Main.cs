@@ -159,11 +159,6 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 				continue;
 			}
 
-			for (var i = 0; i < match.MatchData.Count; i++)
-			{
-				match.MatchData[i] += user.Length + 1;
-			}
-
 			results.Add(new Result
 			{
 				Title = repo.FullName,
@@ -171,7 +166,7 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 				QueryTextDisplay = search,
 				IcoPath = repo.Fork ? _iconFork : _iconRepo,
 				Score = match.Score,
-				TitleHighlightData = match.MatchData,
+				TitleHighlightData = match.MatchData.ConvertAll(e => e + user.Length + 1),
 				ContextData = new ResultData(repo.HtmlUrl),
 				Action = action => Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl),
 			});
