@@ -64,9 +64,9 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 
 	public void UpdateSettings(PowerLauncherPluginSettings settings)
 	{
-		_defaultUser = settings?.AdditionalOptions?.FirstOrDefault(x => x.Key == DefaultUser)?.TextValue ?? string.Empty;
+		_defaultUser = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == DefaultUser)?.TextValue ?? string.Empty;
 		// TODO: how to hide the auth token in settings?
-		_authToken = settings?.AdditionalOptions?.FirstOrDefault(x => x.Key == AuthToken)?.TextValue ?? string.Empty;
+		_authToken = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == AuthToken)?.TextValue ?? string.Empty;
 		GitHub.UpdateAuthSetting(_authToken);
 	}
 

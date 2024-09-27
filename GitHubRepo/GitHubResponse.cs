@@ -107,6 +107,11 @@ public static class GitHub
 			T? response = JsonSerializer.Deserialize<T>(json);
 			return response!;
 		}
+		catch (OperationCanceledException e)
+		{
+			// suppress cancellation exception
+			return e;
+		}
 		catch (Exception e)
 		{
 			Log.Error(e.Message, typeof(Main));
