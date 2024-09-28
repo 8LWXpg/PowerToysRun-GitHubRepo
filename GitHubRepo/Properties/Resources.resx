@@ -1,18 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!--
-    Microsoft ResX Schema
+     Microsoft ResX Schema
 
-    Version 2.0
+         Version 2.0
 
-    The primary goals of this format is to allow a simple XML format
-    that is mostly human readable. The generation and parsing of the
-    various data types are done through the TypeConverter classes
-    associated with the data types.
+    T    he primary goals of this format is to allow a simple XML format
+    th at is mostly human readable. The generation and parsing of the
+    var ious data types are done through the TypeConverter classes
+    asso ciated with the data types.
 
-    Example:
+    Exampl    e:
 
-    ... ado.net/XML headers & schema ...
+    ... ado.    net/XML headers & schema ...
     <resheader name="resmimetype">text/microsoft-resx</resheader>
     <resheader name="version">2.0</resheader>
     <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
@@ -27,36 +27,36 @@
         <comment>This is a comment</comment>
     </data>
 
-    There are any number of "resheader" rows that contain simple
+    There are any number of                 "resheader" rows that contain simple
     name/value pairs.
 
-    Each data row contains a name, and value. The row also contains a
-    type or mimetype. Type corresponds to a .NET class that support
-    text/value conversion through the TypeConverter architecture.
-    Classes that don't support this are serialized and stored with the
+    E ach data row contains a n    ame, and value. The row also contains a
+    type or mimetype. Type corr esponds to a .NET class that support
+    text/value conversion throug h the TypeConverter architecture.
+    Classes that don't support th is are serialized and stored with the
     mimetype set.
 
-    The mimetype is used for serialized objects, and tells the
-    ResXResourceReader how to depersist the object. This is currently not
-    extensible. For a given mimetype the value must be set accordingly:
+    The mimetyp e is used for seriali    zed objects, and tells the
+    ResXResourceReader how to depersi st the object. This is currently not
+    extensible. For a given mimetype t he value must be set accordingly:
 
-    Note - application/x-microsoft.net.object.binary.base64 is the format
-    that the ResXResourceWriter will generate, however the reader can
+    Note - application/x-microsoft.net.o    bject.binary.base64 is the format
+    that the ResXResourceWriter will gene rate, however the reader can
     read any of the formats listed below.
 
-    mimetype: application/x-microsoft.net.object.binary.base64
+    mimetype: application/x-microsoft.net.ob    ject.binary.base64
     value   : The object must be serialized with
-            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : System.Runtime.Serialization.For matters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
 
-    mimetype: application/x-microsoft.net.object.soap.base64
+    mimetype: application/x-microsoft.net.object.    soap.base64
     value   : The object must be serialized with
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : System.Runtime.Serialization.Formatte rs.Soap.SoapFormatter
             : and then encoded with base64 encoding.
 
     mimetype: application/x-microsoft.net.object.bytearray.base64
     value   : The object must be serialized into a byte array
-            : using a System.ComponentModel.TypeConverter
+            : using a System.ComponentModel.TypeConverte r
             : and then encoded with base64 encoding.
     -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
@@ -117,6 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="context_copy_link" xml:space="preserve">
+    <value>Copy link (Ctrl+C)</value>
+  </data>
+  <data name="context_open_issues" xml:space="preserve">
+    <value>Open issues (Ctrl+I)</value>
+  </data>
+  <data name="context_open_pull_requests" xml:space="preserve">
+    <value>Open pull requests (Ctrl+P)</value>
+  </data>
   <data name="plugin_auth_token" xml:space="preserve">
     <value>GitHub authentication token</value>
   </data>
@@ -141,11 +150,5 @@
   </data>
   <data name="plugin_name" xml:space="preserve">
     <value>GitHub Repository</value>
-  </data>
-  <data name="plugin_open_issues" xml:space="preserve">
-    <value>Open issues (Ctrl+I)</value>
-  </data>
-  <data name="plugin_open_pull_requests" xml:space="preserve">
-    <value>Open pull requests (Ctrl+P)</value>
   </data>
 </root>

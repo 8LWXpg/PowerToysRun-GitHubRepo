@@ -4,6 +4,7 @@ using ManagedCommon;
 using Microsoft.PowerToys.Settings.UI.Library;
 using System.Globalization;
 using System.Text;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Wox.Infrastructure;
@@ -214,20 +215,34 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 		var issue = $"{url}/issues";
 		var pr = $"{url}/pulls";
 		return [
-			new ContextMenuResult
+			new ()
 			{
 				PluginName = Name,
-				Title = Resources.plugin_open_issues,
+				Title = Resources.context_copy_link,
+				Glyph = "\xE8C8",
+				FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
+				AcceleratorKey = Key.C,
+				AcceleratorModifiers = ModifierKeys.Control,
+				Action = _ =>
+				{
+					Clipboard.SetText(url);
+					return true;
+				},
+			},
+			new ()
+			{
+				PluginName = Name,
+				Title = Resources.context_open_issues,
 				Glyph = "\xE958",
 				FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
 				AcceleratorKey = Key.I,
 				AcceleratorModifiers = ModifierKeys.Control,
 				Action = _ => Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, issue),
 			},
-			new ContextMenuResult
+			new ()
 			{
 				PluginName = Name,
-				Title = Resources.plugin_open_pull_requests,
+				Title = Resources.context_open_pull_requests,
 				Glyph = "\xF003",
 				FontFamily = "Segoe Fluent Icons,Segoe MDL2 Assets",
 				AcceleratorKey = Key.P,

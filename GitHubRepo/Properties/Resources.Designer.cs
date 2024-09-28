@@ -61,6 +61,33 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Copy link (Ctrl+C).
+        /// </summary>
+        public static string context_copy_link {
+            get {
+                return ResourceManager.GetString("context_copy_link", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open issues (Ctrl+I).
+        /// </summary>
+        public static string context_open_issues {
+            get {
+                return ResourceManager.GetString("context_open_issues", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open pull requests (Ctrl+P).
+        /// </summary>
+        public static string context_open_pull_requests {
+            get {
+                return ResourceManager.GetString("context_open_pull_requests", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to GitHub authentication token.
         /// </summary>
         public static string plugin_auth_token {
@@ -129,24 +156,6 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo.Properties {
         public static string plugin_name {
             get {
                 return ResourceManager.GetString("plugin_name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Open issues (Ctrl+I).
-        /// </summary>
-        public static string plugin_open_issues {
-            get {
-                return ResourceManager.GetString("plugin_open_issues", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Open pull requests (Ctrl+P).
-        /// </summary>
-        public static string plugin_open_pull_requests {
-            get {
-                return ResourceManager.GetString("plugin_open_pull_requests", resourceCulture);
             }
         }
     }

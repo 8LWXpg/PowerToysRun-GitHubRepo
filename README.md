@@ -24,6 +24,7 @@ it will list all the public repositories of the default user.
 
 - **Open issues**: Open the issues page of the repository <kbd>Ctrl+I</kbd>.
 - **Open pull requests**: Open the pull requests page of the repository <kbd>Ctrl+P</kbd>.
+- **Copy link**: Copy the repository link to clipboard <kbd>Ctrl+C</kbd>.
 
 ### Settings
 
@@ -35,9 +36,17 @@ it will list all the public repositories of the default user.
 
 ## Installation
 
+### Manual
+
 1. Download the latest release of the from the releases page.
 2. Extract the zip file's contents to `%LocalAppData%\Microsoft\PowerToys\PowerToys Run\Plugins`
 3. Restart PowerToys.
+
+### Via [ptr](https://github.com/8LWXpg/ptr)
+
+```shell
+ptr add GitHubRepo 8LWXpg/PowerToysRun-GitHubRepo
+```
 
 ## Usage
 
