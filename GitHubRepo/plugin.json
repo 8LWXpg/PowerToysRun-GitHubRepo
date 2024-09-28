@@ -1,14 +1,14 @@
 {
-  "ID": "47B63DBFBDEE4F9C85EBA5F6CD69E243",
-  "ActionKeyword": "gr",
-  "Disabled": false,
-  "IsGlobal": false,
-  "Name": "GitHub Repository",
-  "Author": "8LWXpg",
-  "Version": "1.7.0",
-  "Language": "csharp",
-  "Website": "https://github.com/8LWXpg/PowerToysRun-GitHubRepo",
-  "ExecuteFileName": "Community.PowerToys.Run.Plugin.GitHubRepo.dll",
-  "IcoPathDark": "Images\\dark\\GitHub.png",
-  "IcoPathLight": "Images\\light\\GitHub.png"
+	"ID": "47B63DBFBDEE4F9C85EBA5F6CD69E243",
+	"ActionKeyword": "gr",
+	"Disabled": false,
+	"IsGlobal": false,
+	"Name": "GitHub Repository",
+	"Author": "8LWXpg",
+	"Version": "1.8.0",
+	"Language": "csharp",
+	"Website": "https://github.com/8LWXpg/PowerToysRun-GitHubRepo",
+	"ExecuteFileName": "Community.PowerToys.Run.Plugin.GitHubRepo.dll",
+	"IcoPathDark": "Images\\dark\\GitHub.png",
+	"IcoPathLight": "Images\\light\\GitHub.png"
 }
