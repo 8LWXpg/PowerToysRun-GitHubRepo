@@ -130,7 +130,10 @@
     <value>GitHub authentication token</value>
   </data>
   <data name="plugin_default_user" xml:space="preserve">
-    <value>Default user for searching</value>
+    <value>Default user</value>
+  </data>
+  <data name="plugin_default_user_desc" xml:space="preserve">
+    <value>The user used when type "/"</value>
   </data>
   <data name="plugin_default_user_not_set" xml:space="preserve">
     <value>Default user is not set</value>

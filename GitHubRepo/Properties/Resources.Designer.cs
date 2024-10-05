@@ -97,11 +97,20 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Default user for searching.
+        ///   Looks up a localized string similar to Default user.
         /// </summary>
         public static string plugin_default_user {
             get {
                 return ResourceManager.GetString("plugin_default_user", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The user used when type &quot;/&quot;.
+        /// </summary>
+        public static string plugin_default_user_desc {
+            get {
+                return ResourceManager.GetString("plugin_default_user_desc", resourceCulture);
             }
         }
         

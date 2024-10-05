@@ -25,7 +25,6 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 	private string? _icon;
 	private string? _defaultUser;
 	private string? _authToken;
-
 	private CachingService? _cache;
 
 	// additional data for context menu
@@ -50,6 +49,7 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 			PluginOptionType = PluginAdditionalOption.AdditionalOptionType.Textbox,
 			Key = DefaultUser,
 			DisplayLabel = Resources.plugin_default_user,
+			DisplayDescription = Resources.plugin_default_user_desc,
 			// Max length of a GitHub username is 39
 			TextBoxMaxLength = 39,
 			Value = false,
