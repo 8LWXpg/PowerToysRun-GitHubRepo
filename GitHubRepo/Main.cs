@@ -26,20 +26,14 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 	private string? _defaultUser;
 	private string? _authToken;
 	private CachingService? _cache;
-
 	// additional data for context menu
 	private record ResultData(string Url);
 
 	private PluginInitContext? _context;
-
 	private bool _disposed;
-
 	public string Name => Resources.plugin_name;
-
 	public string Description => Resources.plugin_description;
-
 	public static string EmptyDescription => Resources.plugin_empty_description;
-
 	public static string PluginID => "47B63DBFBDEE4F9C85EBA5F6CD69E243";
 
 	public IEnumerable<PluginAdditionalOption> AdditionalOptions =>
