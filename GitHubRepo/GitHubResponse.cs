@@ -77,24 +77,38 @@ public static class GitHub
 		return await SendRequest<GitHubResponse>($"https://api.github.com/search/repositories?q={query}", cts.Token);
 	}
 
-	public static async Task<QueryResult<List<GitHubRepo>, Exception>> UserRepoQuery(string user)
+	public static async Task<QueryResult<List<GitHubRepo>, Exception>?> UserRepoQuery(string user)
 	{
 		cts?.Cancel();
 		cts = new CancellationTokenSource();
 
-		// sort by latest update, only works if your target is top 30 that recently updated
-		return await SendRequest<List<GitHubRepo>>($"https://api.github.com/users/{user}/repos?sort=updated", cts.Token);
+		try
+		{
+			// sort by latest update, only works if your target is top 30 that recently updated
+			return await SendRequest<List<GitHubRepo>>($"https://api.github.com/users/{user}/repos?sort=updated", cts.Token);
+		}
+		catch
+		{
+			return null;
+		}
 	}
 
-	public static async Task<QueryResult<List<GitHubRepo>, Exception>> DefaultUserRepoQuery(string user)
+	public static async Task<QueryResult<List<GitHubRepo>, Exception>?> DefaultUserRepoQuery(string user)
 	{
 		cts?.Cancel();
 		cts = new CancellationTokenSource();
 
-		// fallback to UserRepoQuery if authtoken is not set
-		return Client.DefaultRequestHeaders.Contains("Authorization") ?
-			await SendRequest<List<GitHubRepo>>("https://api.github.com/user/repos?sort=updated", cts.Token) :
-			await UserRepoQuery(user);
+		try
+		{
+			// fallback to UserRepoQuery if authtoken is not set
+			return Client.DefaultRequestHeaders.Contains("Authorization") ?
+				await SendRequest<List<GitHubRepo>>("https://api.github.com/user/repos?sort=updated", cts.Token) :
+				await UserRepoQuery(user);
+		}
+		catch
+		{
+			return null;
+		}
 	}
 
 	private static async Task<QueryResult<T, Exception>> SendRequest<T>(string url, CancellationToken token)
@@ -106,11 +120,6 @@ public static class GitHub
 			var json = await responseMessage.Content.ReadAsStringAsync(token);
 			T? response = JsonSerializer.Deserialize<T>(json);
 			return response!;
-		}
-		catch (OperationCanceledException e)
-		{
-			// suppress cancellation exception
-			return e;
 		}
 		catch (Exception e)
 		{

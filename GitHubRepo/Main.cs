@@ -169,11 +169,11 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 
 		return results;
 
-		static List<GitHubRepo> UserRepoQuery(string user) => GitHub.UserRepoQuery(user).Result.Match(
+		static List<GitHubRepo> UserRepoQuery(string user) => GitHub.UserRepoQuery(user).Result!.Match(
 			ok: r => r,
 			err: e => [new(e.GetType().Name, string.Empty, e.Message, false)]);
 
-		static List<GitHubRepo> DefaultUserRepoQuery(string user) => GitHub.DefaultUserRepoQuery(user).Result.Match(
+		static List<GitHubRepo> DefaultUserRepoQuery(string user) => GitHub.DefaultUserRepoQuery(user).Result!.Match(
 			ok: r => r,
 			err: e => [new(e.GetType().Name, string.Empty, e.Message, false)]);
 	}
