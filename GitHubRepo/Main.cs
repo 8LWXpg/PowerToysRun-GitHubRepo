@@ -93,7 +93,7 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 		// delay execution for repo query
 		if (!search.Contains('/'))
 		{
-			throw new OperationCanceledException();
+			return [];
 		}
 
 		List<GitHubRepo> repos;
@@ -132,29 +132,10 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 			repos = _cache.GetOrAdd(user, () => UserRepoQuery(user));
 		}
 
-		if (string.IsNullOrEmpty(target))
-		{
-			return repos.ConvertAll(repo => new Result
-			{
-				Title = repo.FullName,
-				SubTitle = repo.Description,
-				QueryTextDisplay = search,
-				IcoPath = repo.Fork ? _iconFork : _iconRepo,
-				ContextData = new ResultData(repo.HtmlUrl),
-				Action = action => Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl),
-			});
-		}
-
-		List<Result> results = [];
-		foreach (GitHubRepo repo in repos)
+		List<Result> results = repos.ConvertAll(repo =>
 		{
 			MatchResult match = StringMatcher.FuzzySearch(target, repo.FullName.Split('/', 2)[1]);
-			if (match.Score <= 0)
-			{
-				continue;
-			}
-
-			results.Add(new Result
+			return new Result
 			{
 				Title = repo.FullName,
 				SubTitle = repo.Description,
@@ -164,7 +145,12 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 				TitleHighlightData = match.MatchData.ConvertAll(e => e + user.Length + 1),
 				ContextData = new ResultData(repo.HtmlUrl),
 				Action = action => Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl),
-			});
+			};
+		});
+
+		if (string.IsNullOrEmpty(target))
+		{
+			_ = results.RemoveAll(r => r.Score <= 0);
 		}
 
 		return results;
@@ -182,7 +168,7 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 	public List<Result> Query(Query query, bool delayedExecution)
 	{
 		return !delayedExecution || query.Search.Contains('/') || string.IsNullOrWhiteSpace(query.Search)
-			? throw new OperationCanceledException()
+			? []
 			: RepoQuery(query.Search).ConvertAll(repo => new Result
 			{
 				Title = repo.FullName,
