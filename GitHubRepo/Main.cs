@@ -142,13 +142,13 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 				QueryTextDisplay = search,
 				IcoPath = repo.Fork ? _iconFork : _iconRepo,
 				Score = match.Score,
-				TitleHighlightData = match.MatchData.ConvertAll(e => e + user.Length + 1),
+				TitleHighlightData = match.MatchData?.ConvertAll(e => e + user.Length + 1),
 				ContextData = new ResultData(repo.HtmlUrl),
 				Action = action => Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl),
 			};
 		});
 
-		if (string.IsNullOrEmpty(target))
+		if (!string.IsNullOrEmpty(target))
 		{
 			_ = results.RemoveAll(r => r.Score <= 0);
 		}
