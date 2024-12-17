@@ -119,8 +119,7 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 
 			user = _defaultUser;
 			target = search[1..];
-
-			repos = _cache.GetOrAdd(user, () => DefaultUserRepoQuery(user));
+			repos = !string.IsNullOrEmpty(_authToken) ? _cache.GetOrAdd(user, UserTokenQuery) : _cache.GetOrAdd(user, () => UserRepoQuery(user));
 		}
 		else
 		{
@@ -159,7 +158,7 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 			ok: r => r,
 			err: e => [new(e.GetType().Name, string.Empty, e.Message, false)]);
 
-		static List<GitHubRepo> DefaultUserRepoQuery(string user) => GitHub.DefaultUserRepoQuery(user).Result!.Match(
+		static List<GitHubRepo> UserTokenQuery() => GitHub.UserTokenQuery().Result!.Match(
 			ok: r => r,
 			err: e => [new(e.GetType().Name, string.Empty, e.Message, false)]);
 	}

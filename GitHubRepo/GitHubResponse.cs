@@ -1,7 +1,3 @@
-// Copyright (c) Microsoft Corporation
-// The Microsoft Corporation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -93,17 +89,14 @@ public static class GitHub
 		}
 	}
 
-	public static async Task<QueryResult<List<GitHubRepo>, Exception>?> DefaultUserRepoQuery(string user)
+	public static async Task<QueryResult<List<GitHubRepo>, Exception>?> UserTokenQuery()
 	{
 		cts?.Cancel();
 		cts = new CancellationTokenSource();
 
 		try
 		{
-			// fallback to UserRepoQuery if authtoken is not set
-			return Client.DefaultRequestHeaders.Contains("Authorization") ?
-				await SendRequest<List<GitHubRepo>>("https://api.github.com/user/repos?sort=updated", cts.Token) :
-				await UserRepoQuery(user);
+			return await SendRequest<List<GitHubRepo>>("https://api.github.com/user/repos?sort=updated", cts.Token);
 		}
 		catch
 		{
