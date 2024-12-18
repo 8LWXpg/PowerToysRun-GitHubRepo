@@ -9,7 +9,7 @@ sudo {
 	Start-Job { Stop-Process -Name PowerToys* } | Wait-Job > $null
 
 	$ptPath = 'C:\Program Files\PowerToys'
-	$debug = '.\bin\x64\Debug\net8.0-windows'
+	$debug = '.\bin\x64\Debug\net9.0-windows'
 	$dest = "$env:LOCALAPPDATA\Microsoft\PowerToys\PowerToys Run\Plugins\GitHubRepo"
 	$files = @(
 		'Community.PowerToys.Run.Plugin.GitHubRepo.deps.json',
