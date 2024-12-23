@@ -149,7 +149,7 @@
   </data>
   <data name="plugin_in_browser_name" xml:space="preserve">
     <value>通过 {0}</value>
-    <comment>例如 "搜索网页通过 {浏览器名字}"</comment>
+    <comment>Like "Search the web in {the browser name}"</comment>
   </data>
   <data name="plugin_name" xml:space="preserve">
     <value>GitHub 仓库</value>
