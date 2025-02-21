@@ -76,7 +76,7 @@ public static class GitHub
 		cts?.Cancel();
 		cts = new CancellationTokenSource();
 
-		return await SendRequest<GitHubResponse>($"https://api.github.com/search/repositories?q={query}", cts.Token);
+		return await SendRequest<GitHubResponse>($"{_url}/search/repositories?q={query}", cts.Token);
 	}
 
 	public static async Task<QueryResult<List<GitHubRepo>, Exception>?> UserRepoQuery(string user)
@@ -87,7 +87,7 @@ public static class GitHub
 		try
 		{
 			// sort by latest update, only works if your target is top 30 that recently updated
-			return await SendRequest<List<GitHubRepo>>($"https://api.github.com/users/{user}/repos?sort=updated", cts.Token);
+			return await SendRequest<List<GitHubRepo>>($"{_url}/users/{user}/repos?sort=updated", cts.Token);
 		}
 		catch
 		{
@@ -102,7 +102,7 @@ public static class GitHub
 
 		try
 		{
-			return await SendRequest<List<GitHubRepo>>("https://api.github.com/user/repos?sort=updated", cts.Token);
+			return await SendRequest<List<GitHubRepo>>($"{_url}/user/repos?sort=updated", cts.Token);
 		}
 		catch
 		{
