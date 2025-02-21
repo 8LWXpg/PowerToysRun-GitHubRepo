@@ -123,25 +123,25 @@
   <data name="context_open_pull_requests" xml:space="preserve">
     <value>Pull Requests öffnen (Ctrl+P)</value>
   </data>
-  <data name="plugin_auth_token" xml:space="preserve">
+  <data name="option_auth_token" xml:space="preserve">
     <value>Authentifizierungstoken für GitHub</value>
   </data>
-  <data name="plugin_default_user" xml:space="preserve">
+  <data name="option_default_user" xml:space="preserve">
     <value>Standardbenutzer für die Suche</value>
   </data>
-  <data name="plugin_default_user_not_set" xml:space="preserve">
+  <data name="default_user_not_set" xml:space="preserve">
     <value>Standardbenutzer ist nicht festgelegt</value>
   </data>
-  <data name="plugin_default_user_not_set_description" xml:space="preserve">
+  <data name="default_user_not_set_description" xml:space="preserve">
     <value>In den Einstellungen ändern</value>
   </data>
   <data name="plugin_description" xml:space="preserve">
     <value>Ein GitHub-Repository durchsuchen</value>
   </data>
-  <data name="plugin_empty_description" xml:space="preserve">
+  <data name="open_github" xml:space="preserve">
     <value>github.com öffnen</value>
   </data>
-  <data name="plugin_in_browser_name" xml:space="preserve">
+  <data name="in_browser_name" xml:space="preserve">
     <value>In {0}</value>
     <comment>Like "Search the web in {the browser name}"</comment>
   </data>

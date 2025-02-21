@@ -1,18 +1,18 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!--
-     Microsoft ResX Schema
-
-         Version 2.0
-
-    T    he primary goals of this format is to allow a simple XML format
-    th at is mostly human readable. The generation and parsing of the
-    var ious data types are done through the TypeConverter classes
-    asso ciated with the data types.
-
-    Exampl    e:
-
-    ... ado.    net/XML headers & schema ...
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
     <resheader name="resmimetype">text/microsoft-resx</resheader>
     <resheader name="version">2.0</resheader>
     <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
@@ -26,37 +26,37 @@
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
         <comment>This is a comment</comment>
     </data>
-
-    There are any number of                 "resheader" rows that contain simple
+                
+    There are any number of "resheader" rows that contain simple 
     name/value pairs.
-
-    E ach data row contains a n    ame, and value. The row also contains a
-    type or mimetype. Type corr esponds to a .NET class that support
-    text/value conversion throug h the TypeConverter architecture.
-    Classes that don't support th is are serialized and stored with the
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
     mimetype set.
-
-    The mimetyp e is used for seriali    zed objects, and tells the
-    ResXResourceReader how to depersi st the object. This is currently not
-    extensible. For a given mimetype t he value must be set accordingly:
-
-    Note - application/x-microsoft.net.o    bject.binary.base64 is the format
-    that the ResXResourceWriter will gene rate, however the reader can
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
     read any of the formats listed below.
-
-    mimetype: application/x-microsoft.net.ob    ject.binary.base64
-    value   : The object must be serialized with
-            : System.Runtime.Serialization.For matters.Binary.BinaryFormatter
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
-
-    mimetype: application/x-microsoft.net.object.    soap.base64
-    value   : The object must be serialized with
-            : System.Runtime.Serialization.Formatte rs.Soap.SoapFormatter
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
 
     mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array
-            : using a System.ComponentModel.TypeConverte r
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
@@ -126,32 +126,41 @@
   <data name="context_open_pull_requests" xml:space="preserve">
     <value>Open pull requests (Ctrl+P)</value>
   </data>
-  <data name="plugin_auth_token" xml:space="preserve">
-    <value>GitHub authentication token</value>
-  </data>
-  <data name="plugin_default_user" xml:space="preserve">
-    <value>Default user</value>
-  </data>
-  <data name="plugin_default_user_desc" xml:space="preserve">
-    <value>The user used when type "/"</value>
-  </data>
-  <data name="plugin_default_user_not_set" xml:space="preserve">
+  <data name="default_user_not_set" xml:space="preserve">
     <value>Default user is not set</value>
   </data>
-  <data name="plugin_default_user_not_set_description" xml:space="preserve">
+  <data name="default_user_not_set_description" xml:space="preserve">
     <value>Change in settings</value>
+  </data>
+  <data name="in_browser_name" xml:space="preserve">
+    <value>In {0}</value>
+    <comment>Like "Search the web in {the browser name}"</comment>
+  </data>
+  <data name="open_github" xml:space="preserve">
+    <value>Open github.com</value>
+  </data>
+  <data name="option_auth_token" xml:space="preserve">
+    <value>GitHub authentication token</value>
+  </data>
+  <data name="option_default_user" xml:space="preserve">
+    <value>Default user</value>
+  </data>
+  <data name="option_default_user_desc" xml:space="preserve">
+    <value>The user used when type "/"</value>
   </data>
   <data name="plugin_description" xml:space="preserve">
     <value>Search a GitHub repository</value>
   </data>
-  <data name="plugin_empty_description" xml:space="preserve">
-    <value>Open github.com</value>
-  </data>
-  <data name="plugin_in_browser_name" xml:space="preserve">
-    <value>In {0}</value>
-    <comment>Like "Search the web in {the browser name}"</comment>
-  </data>
   <data name="plugin_name" xml:space="preserve">
     <value>GitHub Repository</value>
+  </data>
+  <data name="option_self_host_link" xml:space="preserve">
+    <value>Search self-hosted GitHub</value>
+  </data>
+  <data name="option_self_host_link_desc" xml:space="preserve">
+    <value>This replaces default url used</value>
+  </data>
+  <data name="option_url" xml:space="preserve">
+    <value>Url of API endpoint</value>
   </data>
 </root>

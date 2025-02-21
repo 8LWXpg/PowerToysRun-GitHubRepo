@@ -88,47 +88,92 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to GitHub authentication token.
-        /// </summary>
-        public static string plugin_auth_token {
-            get {
-                return ResourceManager.GetString("plugin_auth_token", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Default user.
-        /// </summary>
-        public static string plugin_default_user {
-            get {
-                return ResourceManager.GetString("plugin_default_user", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The user used when type &quot;/&quot;.
-        /// </summary>
-        public static string plugin_default_user_desc {
-            get {
-                return ResourceManager.GetString("plugin_default_user_desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Default user is not set.
         /// </summary>
-        public static string plugin_default_user_not_set {
+        public static string default_user_not_set {
             get {
-                return ResourceManager.GetString("plugin_default_user_not_set", resourceCulture);
+                return ResourceManager.GetString("default_user_not_set", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Change in settings.
         /// </summary>
-        public static string plugin_default_user_not_set_description {
+        public static string default_user_not_set_description {
             get {
-                return ResourceManager.GetString("plugin_default_user_not_set_description", resourceCulture);
+                return ResourceManager.GetString("default_user_not_set_description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to In {0}.
+        /// </summary>
+        public static string in_browser_name {
+            get {
+                return ResourceManager.GetString("in_browser_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string open_github {
+            get {
+                return ResourceManager.GetString("open_github", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GitHub authentication token.
+        /// </summary>
+        public static string option_auth_token {
+            get {
+                return ResourceManager.GetString("option_auth_token", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default user.
+        /// </summary>
+        public static string option_default_user {
+            get {
+                return ResourceManager.GetString("option_default_user", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The user used when type &quot;/&quot;.
+        /// </summary>
+        public static string option_default_user_desc {
+            get {
+                return ResourceManager.GetString("option_default_user_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search self-hosted GitHub.
+        /// </summary>
+        public static string option_self_host_link {
+            get {
+                return ResourceManager.GetString("option_self_host_link", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This replaces default url used.
+        /// </summary>
+        public static string option_self_host_link_desc {
+            get {
+                return ResourceManager.GetString("option_self_host_link_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Url of API endpoint.
+        /// </summary>
+        public static string option_url {
+            get {
+                return ResourceManager.GetString("option_url", resourceCulture);
             }
         }
         
@@ -138,24 +183,6 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo.Properties {
         public static string plugin_description {
             get {
                 return ResourceManager.GetString("plugin_description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Open github.com.
-        /// </summary>
-        public static string plugin_empty_description {
-            get {
-                return ResourceManager.GetString("plugin_empty_description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to In {0}.
-        /// </summary>
-        public static string plugin_in_browser_name {
-            get {
-                return ResourceManager.GetString("plugin_in_browser_name", resourceCulture);
             }
         }
         

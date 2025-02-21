@@ -15,9 +15,10 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo;
 
 public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable, IDisposable, IDelayedExecutionPlugin, IContextMenu
 {
-	private static readonly CompositeFormat PluginInBrowserName = CompositeFormat.Parse(Resources.plugin_in_browser_name);
+	private static readonly CompositeFormat PluginInBrowserName = CompositeFormat.Parse(Resources.in_browser_name);
 	private const string DefaultUser = nameof(DefaultUser);
 	private const string AuthToken = nameof(AuthToken);
+	private const string SelfHostUrl = nameof(SelfHostUrl);
 
 	private string? _iconFolderPath;
 	private string? _iconFork;
@@ -25,6 +26,7 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 	private string? _icon;
 	private string? _defaultUser;
 	private string? _authToken;
+	private readonly string? _selfHostUrl;
 	private CachingService? _cache;
 	// additional data for context menu
 	private record ResultData(string Url);
@@ -33,7 +35,6 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 	private bool _disposed;
 	public string Name => Resources.plugin_name;
 	public string Description => Resources.plugin_description;
-	public static string EmptyDescription => Resources.plugin_empty_description;
 	public static string PluginID => "47B63DBFBDEE4F9C85EBA5F6CD69E243";
 
 	public IEnumerable<PluginAdditionalOption> AdditionalOptions =>
@@ -42,19 +43,25 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 		{
 			PluginOptionType = PluginAdditionalOption.AdditionalOptionType.Textbox,
 			Key = DefaultUser,
-			DisplayLabel = Resources.plugin_default_user,
-			DisplayDescription = Resources.plugin_default_user_desc,
+			DisplayLabel = Resources.option_default_user,
+			DisplayDescription = Resources.option_default_user_desc,
 			// Max length of a GitHub username is 39
 			TextBoxMaxLength = 39,
-			Value = false,
 		},
 		new()
 		{
 			PluginOptionType = PluginAdditionalOption.AdditionalOptionType.Textbox,
 			Key = AuthToken,
-			DisplayLabel = Resources.plugin_auth_token,
-			Value = false,
+			DisplayLabel = Resources.option_auth_token,
 		},
+		new()
+		{
+			PluginOptionType = PluginAdditionalOption.AdditionalOptionType.CheckboxAndTextbox,
+			Key = SelfHostUrl,
+			DisplayLabel = Resources.option_self_host_link,
+			DisplayDescription = Resources.option_self_host_link_desc,
+			SecondDisplayLabel = Resources.option_url,
+		}
 	];
 
 	public void UpdateSettings(PowerLauncherPluginSettings settings)
@@ -63,6 +70,8 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 		// TODO: how to hide the auth token in settings?
 		_authToken = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == AuthToken)?.TextValue ?? string.Empty;
 		GitHub.UpdateAuthSetting(_authToken);
+		PluginAdditionalOption? selfHostUrl = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == SelfHostUrl);
+		GitHub.Url = selfHostUrl!.Value ? selfHostUrl.TextValue : string.Empty;
 	}
 
 	// handle user repo user
@@ -80,7 +89,7 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 			[
 				new Result
 				{
-					Title = EmptyDescription,
+					Title = Resources.open_github,
 					SubTitle = string.Format(CultureInfo.CurrentCulture, PluginInBrowserName, BrowserInfo.Name ?? BrowserInfo.MSEdgeName),
 					QueryTextDisplay = string.Empty,
 					IcoPath = _icon,
@@ -108,8 +117,8 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 				[
 					new Result
 					{
-						Title = Resources.plugin_default_user_not_set,
-						SubTitle = Resources.plugin_default_user_not_set_description,
+						Title = Resources.default_user_not_set,
+						SubTitle = Resources.default_user_not_set_description,
 						QueryTextDisplay = string.Empty,
 						IcoPath = _icon,
 						Action = action => true,

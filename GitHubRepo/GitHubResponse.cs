@@ -43,6 +43,12 @@ public static class GitHub
 
 	// Used to cancel the request if the user types a new query
 	private static CancellationTokenSource? cts;
+	private static string _url = "https://api.github.com";
+	public static string Url
+	{
+		get => _url;
+		set => _url = string.IsNullOrEmpty(value) ? "https://api.github.com" : value;
+	}
 
 	static GitHub()
 	{

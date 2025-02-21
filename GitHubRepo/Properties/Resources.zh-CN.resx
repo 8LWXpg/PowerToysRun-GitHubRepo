@@ -126,28 +126,28 @@
   <data name="context_open_pull_requests" xml:space="preserve">
     <value>打开 pull requests (Ctrl+P)</value>
   </data>
-  <data name="plugin_auth_token" xml:space="preserve">
+  <data name="option_auth_token" xml:space="preserve">
     <value>GitHub 验证令牌</value>
   </data>
-  <data name="plugin_default_user" xml:space="preserve">
+  <data name="option_default_user" xml:space="preserve">
     <value>默认用户</value>
   </data>
-  <data name="plugin_default_user_desc" xml:space="preserve">
+  <data name="option_default_user_desc" xml:space="preserve">
     <value>当用户输入“/”时使用</value>
   </data>
-  <data name="plugin_default_user_not_set" xml:space="preserve">
+  <data name="default_user_not_set" xml:space="preserve">
     <value>默认用户未设置</value>
   </data>
-  <data name="plugin_default_user_not_set_description" xml:space="preserve">
+  <data name="default_user_not_set_description" xml:space="preserve">
     <value>更改设置</value>
   </data>
   <data name="plugin_description" xml:space="preserve">
     <value>查找 GitHub 仓库</value>
   </data>
-  <data name="plugin_empty_description" xml:space="preserve">
+  <data name="open_github" xml:space="preserve">
     <value>打开 GitHub</value>
   </data>
-  <data name="plugin_in_browser_name" xml:space="preserve">
+  <data name="in_browser_name" xml:space="preserve">
     <value>通过 {0}</value>
     <comment>Like "Search the web in {the browser name}"</comment>
   </data>
