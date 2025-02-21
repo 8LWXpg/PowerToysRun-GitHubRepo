@@ -26,7 +26,6 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 	private string? _icon;
 	private string? _defaultUser;
 	private string? _authToken;
-	private readonly string? _selfHostUrl;
 	private CachingService? _cache;
 	// additional data for context menu
 	private record ResultData(string Url);
