@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="context_copy_link" xml:space="preserve">
+    <value>Копіювати посилання (Ctrl+C)</value>
+  </data>
+  <data name="context_open_issues" xml:space="preserve">
+    <value>Відкрити задачі (Ctrl+I)</value>
+  </data>
+  <data name="context_open_pull_requests" xml:space="preserve">
+    <value>Відкрити запити на злиття (Ctrl+P)</value>
+  </data>
+  <data name="default_user_not_set" xml:space="preserve">
+    <value>Стандартного користувача не встановлено</value>
+  </data>
+  <data name="default_user_not_set_description" xml:space="preserve">
+    <value>Змініть у налаштуваннях</value>
+  </data>
+  <data name="in_browser_name" xml:space="preserve">
+    <value>У {0}</value>
+    <comment>Наприклад: "Шукати в інтернеті у {назва браузера}"</comment>
+  </data>
+  <data name="open_github" xml:space="preserve">
+    <value>Відкрити github.com</value>
+  </data>
+  <data name="option_auth_token" xml:space="preserve">
+    <value>Токен автентифікації GitHub</value>
+  </data>
+  <data name="option_default_user" xml:space="preserve">
+    <value>Стандартний користувач</value>
+  </data>
+  <data name="option_default_user_desc" xml:space="preserve">
+    <value>Стандартний користувач під час введення «/»</value>
+  </data>
+  <data name="plugin_description" xml:space="preserve">
+    <value>Пошук у репозиторії GitHub</value>
+  </data>
+  <data name="plugin_name" xml:space="preserve">
+    <value>Репозиторій GitHub</value>
+  </data>
+  <data name="option_self_host_link" xml:space="preserve">
+    <value>Пошук на власному сервері GitHub</value>
+  </data>
+  <data name="option_self_host_link_desc" xml:space="preserve">
+    <value>Замінити стандартну URL-адресу</value>
+  </data>
+  <data name="option_url" xml:space="preserve">
+    <value>URL-адреса кінцевої точки API</value>
+  </data>
+</root>
