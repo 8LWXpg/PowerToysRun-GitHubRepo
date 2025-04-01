@@ -141,7 +141,9 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 
 		List<Result> results = repos.ConvertAll(repo =>
 		{
-			MatchResult match = StringMatcher.FuzzySearch(target, repo.FullName.Split('/', 2)[1]);
+			var parts = repo.FullName.Split('/', 2);
+			var repoName = parts.Length == 1 ? parts[0] : parts[1];
+			MatchResult match = StringMatcher.FuzzySearch(target, repoName);
 			return new Result
 			{
 				Title = repo.FullName,
