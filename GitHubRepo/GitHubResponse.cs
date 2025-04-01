@@ -131,7 +131,7 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo
             catch (Exception e)
             {
                 Log.Error(e.Message, typeof(Main));
-                return e;
+                return e; 
             }
         }
     }
