@@ -148,11 +148,11 @@
   <data name="option_default_user_desc" xml:space="preserve">
     <value>The user used when type "/"</value>
   </data>
-  <data name="plugin_description" xml:space="preserve">
-    <value>Search a GitHub repository</value>
+  <data name="option_results_number" xml:space="preserve">
+    <value>Number of results</value>
   </data>
-  <data name="plugin_name" xml:space="preserve">
-    <value>GitHub Repository</value>
+  <data name="option_results_number_desc" xml:space="preserve">
+    <value>Choose how many results to load each time</value>
   </data>
   <data name="option_self_host_link" xml:space="preserve">
     <value>Search self-hosted GitHub</value>
@@ -162,5 +162,11 @@
   </data>
   <data name="option_url" xml:space="preserve">
     <value>Url of API endpoint</value>
+  </data>
+  <data name="plugin_description" xml:space="preserve">
+    <value>Search a GitHub repository</value>
+  </data>
+  <data name="plugin_name" xml:space="preserve">
+    <value>GitHub Repository</value>
   </data>
 </root>

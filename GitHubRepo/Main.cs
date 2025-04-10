@@ -17,15 +17,17 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 {
 	private static readonly CompositeFormat PluginInBrowserName = CompositeFormat.Parse(Resources.in_browser_name);
 	private const string DefaultUser = nameof(DefaultUser);
+	private string? _defaultUser;
 	private const string AuthToken = nameof(AuthToken);
+	private string? _authToken;
 	private const string SelfHostUrl = nameof(SelfHostUrl);
+	private const string ResultNumber = nameof(ResultNumber);
+	private int _resultNumber;
 
 	private string? _iconFolderPath;
 	private string? _iconFork;
 	private string? _iconRepo;
 	private string? _icon;
-	private string? _defaultUser;
-	private string? _authToken;
 	private CachingService? _cache;
 	// additional data for context menu
 	private record ResultData(string Url);
@@ -60,7 +62,16 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 			DisplayLabel = Resources.option_self_host_link,
 			DisplayDescription = Resources.option_self_host_link_desc,
 			SecondDisplayLabel = Resources.option_url,
-		}
+		},
+		new()
+		{
+			PluginOptionType = PluginAdditionalOption.AdditionalOptionType.Numberbox,
+			Key = ResultNumber,
+			DisplayLabel = Resources.option_results_number,
+			DisplayDescription = Resources.option_results_number_desc,
+			NumberBoxMin = 30,
+			NumberBoxMax = 100,
+		},
 	];
 
 	public void UpdateSettings(PowerLauncherPluginSettings settings)
@@ -68,6 +79,7 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 		_defaultUser = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == DefaultUser)?.TextValue ?? string.Empty;
 		// TODO: how to hide the auth token in settings?
 		_authToken = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == AuthToken)?.TextValue ?? string.Empty;
+		_resultNumber = (int?)(settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == ResultNumber)?.NumberValue) ?? 30;
 		GitHub.UpdateAuthSetting(_authToken);
 		PluginAdditionalOption? selfHostUrl = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == SelfHostUrl);
 		GitHub.Url = selfHostUrl!.Value ? selfHostUrl.TextValue : string.Empty;
@@ -164,13 +176,13 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 
 		return results;
 
-		static List<GitHubRepo> UserRepoQuery(string user) => GitHub.UserRepoQuery(user).Result!.Match(
+		List<GitHubRepo> UserRepoQuery(string user) => GitHub.UserRepoQuery(user, _resultNumber).Result!.Match(
 			ok: r => r,
 			err: e => [new(e.GetType().Name, string.Empty, e.Message, false)]);
 
-		static List<GitHubRepo> UserTokenQuery() => GitHub.UserTokenQuery().Result!.Match(
-			ok: r => r,
-			err: e => [new(e.GetType().Name, string.Empty, e.Message, false)]);
+		List<GitHubRepo> UserTokenQuery() => GitHub.UserTokenQuery(_resultNumber).Result!.Match(
+		   ok: r => r,
+		   err: e => [new(e.GetType().Name, string.Empty, e.Message, false)]);
 	}
 
 	// handle repo search with delay
@@ -188,7 +200,7 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 				Action = action => Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl),
 			});
 
-		static List<GitHubRepo> RepoQuery(string search) => GitHub.RepoQuery(search).Result.Match(
+		List<GitHubRepo> RepoQuery(string search) => GitHub.RepoQuery(search, _resultNumber).Result.Match(
 				ok: r => r.Items,
 				err: e => [new(e.GetType().Name, string.Empty, e.Message, false)]);
 	}

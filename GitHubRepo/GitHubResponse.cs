@@ -71,15 +71,15 @@ public static class GitHub
 		}
 	}
 
-	public static async Task<QueryResult<GitHubResponse, Exception>> RepoQuery(string query)
+	public static async Task<QueryResult<GitHubResponse, Exception>> RepoQuery(string query, int pageSize)
 	{
 		cts?.Cancel();
 		cts = new CancellationTokenSource();
 
-		return await SendRequest<GitHubResponse>($"{_url}/search/repositories?q={query}", cts.Token);
+		return await SendRequest<GitHubResponse>($"{_url}/search/repositories?per_page={pageSize}&q={query}", cts.Token);
 	}
 
-	public static async Task<QueryResult<List<GitHubRepo>, Exception>?> UserRepoQuery(string user)
+	public static async Task<QueryResult<List<GitHubRepo>, Exception>?> UserRepoQuery(string user, int pageSize)
 	{
 		cts?.Cancel();
 		cts = new CancellationTokenSource();
@@ -87,7 +87,7 @@ public static class GitHub
 		try
 		{
 			// sort by latest update, only works if your target is top 30 that recently updated
-			return await SendRequest<List<GitHubRepo>>($"{_url}/users/{user}/repos?sort=updated", cts.Token);
+			return await SendRequest<List<GitHubRepo>>($"{_url}/users/{user}/repos?per_page={pageSize}&sort=updated", cts.Token);
 		}
 		catch
 		{
@@ -95,14 +95,14 @@ public static class GitHub
 		}
 	}
 
-	public static async Task<QueryResult<List<GitHubRepo>, Exception>?> UserTokenQuery()
+	public static async Task<QueryResult<List<GitHubRepo>, Exception>?> UserTokenQuery(int pageSize)
 	{
 		cts?.Cancel();
 		cts = new CancellationTokenSource();
 
 		try
 		{
-			return await SendRequest<List<GitHubRepo>>($"{_url}/user/repos?sort=updated", cts.Token);
+			return await SendRequest<List<GitHubRepo>>($"{_url}/user/repos?per_page={pageSize}&sort=updated", cts.Token);
 		}
 		catch
 		{
