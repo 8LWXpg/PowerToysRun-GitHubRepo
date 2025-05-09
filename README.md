@@ -2,7 +2,7 @@
 
 This is a plugin for [PowerToys Run](https://aka.ms/PowerToysOverview_PowerToysRun) that allows to search for GitHub repositories then open in your default browser.
 
-Checkout the [Template](https://github.com/8LWXpg/PowerToysRun-PluginTemplate) for a starting point to create your own plugin.
+Check out the [Template](https://github.com/8LWXpg/PowerToysRun-PluginTemplate) for a starting point to create your own plugin.
 
 ## Features
 
@@ -16,7 +16,7 @@ Checkout the [Template](https://github.com/8LWXpg/PowerToysRun-PluginTemplate) f
 
 ### Search repo with default user: `/repo`
 
-If authtoken is set, it will list all the repositories the token has access to. Otherwise,
+If auth token is set, it will list all the repositories the token has access to. Otherwise,
 it will list all the public repositories of the default user.
 ![Search repo with default user](./assets/default_user.png)
 
@@ -57,7 +57,7 @@ ptr add GitHubRepo 8LWXpg/PowerToysRun-GitHubRepo
 ## Building
 
 1. Clone the repository and the dependencies in `/lib` with `GitHubRepo/copyLib.ps1`.
-2. run `dotnet build -c Release`.
+2. Run `dotnet build -c Release`.
 
 ## Debugging
 

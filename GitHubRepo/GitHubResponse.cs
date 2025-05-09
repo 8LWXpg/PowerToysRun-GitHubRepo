@@ -86,7 +86,7 @@ public static class GitHub
 
 		try
 		{
-			// sort by latest update, only works if your target is top 30 that recently updated
+			// Sort by latest update, only works if your target is top 30 that recently updated
 			return await SendRequest<List<GitHubRepo>>($"{_url}/users/{user}/repos?per_page={pageSize}&sort=updated", cts.Token);
 		}
 		catch
