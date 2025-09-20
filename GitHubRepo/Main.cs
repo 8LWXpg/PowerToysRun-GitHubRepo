@@ -102,7 +102,7 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 				{
 					Title = Resources.open_github,
 					SubTitle = string.Format(CultureInfo.CurrentCulture, PluginInBrowserName, BrowserInfo.Name ?? BrowserInfo.MSEdgeName),
-					QueryTextDisplay = string.Empty,
+					QueryTextDisplay = " ",
 					IcoPath = _icon,
 					ProgramArguments = arguments,
 					Action = action => Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, arguments),
@@ -130,7 +130,7 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 					{
 						Title = Resources.default_user_not_set,
 						SubTitle = Resources.default_user_not_set_description,
-						QueryTextDisplay = string.Empty,
+						QueryTextDisplay = " ",
 						IcoPath = _icon,
 						Action = action => true,
 					}
