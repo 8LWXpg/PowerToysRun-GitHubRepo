@@ -3,14 +3,14 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo;
 public class QueryResult<T, E>
 {
 	private readonly bool _success;
-	private readonly T? Value;
-	private readonly E? Exception;
+	private readonly T? _value;
+	private readonly E? _exception;
 
 	private QueryResult(T? v, E? e, bool success)
 	{
 		_success = success;
-		Value = v;
-		Exception = e;
+		_value = v;
+		_exception = e;
 	}
 
 	public static QueryResult<T, E> Ok(T v) => new(v, default, true);
@@ -20,5 +20,5 @@ public class QueryResult<T, E>
 	public static implicit operator QueryResult<T, E>(T v) => new(v, default, true);
 	public static implicit operator QueryResult<T, E>(E e) => new(default, e, false);
 
-	public R Match<R>(Func<T, R> ok, Func<E, R> err) => _success ? ok(Value!) : err(Exception!);
+	public R Match<R>(Func<T, R> ok, Func<E, R> err) => _success ? ok(_value!) : err(_exception!);
 }

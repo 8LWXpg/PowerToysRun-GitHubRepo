@@ -81,8 +81,11 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 		_authToken = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == AuthToken)?.TextValue ?? string.Empty;
 		_resultNumber = (int?)(settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == ResultNumber)?.NumberValue) ?? 30;
 		GitHub.UpdateAuthSetting(_authToken);
-		PluginAdditionalOption? selfHostUrl = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == SelfHostUrl);
-		GitHub.Url = selfHostUrl!.Value ? selfHostUrl.TextValue : string.Empty;
+		PluginAdditionalOption selfHostUrl = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == SelfHostUrl)!;
+		if (selfHostUrl.Value)
+		{
+			GitHub.Url = selfHostUrl.TextValue;
+		}
 	}
 
 	// handle user repo user
