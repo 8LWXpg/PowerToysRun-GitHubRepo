@@ -22,7 +22,7 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Resources {
+    internal class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -133,6 +133,15 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Token for each user, newline separated.
+        /// </summary>
+        internal static string option_auth_token_desc {
+            get {
+                return ResourceManager.GetString("option_auth_token_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Default user.
         /// </summary>
         internal static string option_default_user {
@@ -142,7 +151,7 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The user used when type "/".
+        ///   Looks up a localized string similar to The user used when type "/", newline separated.
         /// </summary>
         internal static string option_default_user_desc {
             get {

@@ -142,11 +142,14 @@
   <data name="option_auth_token" xml:space="preserve">
     <value>GitHub authentication token</value>
   </data>
+  <data name="option_auth_token_desc" xml:space="preserve">
+    <value>Token for each user, newline separated</value>
+  </data>
   <data name="option_default_user" xml:space="preserve">
     <value>Default user</value>
   </data>
   <data name="option_default_user_desc" xml:space="preserve">
-    <value>The user used when type "/"</value>
+    <value>The user used when type "/", newline separated</value>
   </data>
   <data name="option_results_number" xml:space="preserve">
     <value>Number of results</value>

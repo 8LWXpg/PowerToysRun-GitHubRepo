@@ -39,7 +39,8 @@ public record GitHubRepo
 
 public static class GitHub
 {
-	private static readonly HttpClient _client;
+	private static readonly Dictionary<string, HttpClient> _clientsByUsername = [];
+	private static readonly HttpClient _defaultClient = CreateClient(null);
 
 	// Used to cancel the request if the user types a new query
 	private static CancellationTokenSource? _cts;
@@ -49,80 +50,95 @@ public static class GitHub
 		get => _url;
 		set => _url = string.IsNullOrWhiteSpace(value) ? "https://api.github.com" : value;
 	}
+	public static int PageSize { get; set; }
 
-	static GitHub()
+	private static HttpClient CreateClient(string? token)
 	{
-		_client = new HttpClient();
-		_client.DefaultRequestHeaders.UserAgent.Add(ProductInfoHeaderValue.Parse("PowerToys"));
-		_client.DefaultRequestHeaders.Add("Accept", "application/vnd.github+json");
-		_client.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
+		var client = new HttpClient();
+		client.DefaultRequestHeaders.UserAgent.Add(ProductInfoHeaderValue.Parse("PowerToys"));
+		client.DefaultRequestHeaders.Add("Accept", "application/vnd.github+json");
+		client.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
+
+		if (!string.IsNullOrEmpty(token))
+		{
+			client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+		}
+
+		return client;
 	}
 
-	public static void UpdateAuthSetting(string auth)
+	/// <summary>
+	/// Update <c>_clientsByUsername</c> with new usernames and <c>HttpClient</c> with token
+	/// </summary>
+	public static void UpdateAuth(IReadOnlyList<string> usernames, IReadOnlyList<string> tokens)
 	{
-		if (string.IsNullOrEmpty(auth))
+		foreach (HttpClient client in _clientsByUsername.Values)
 		{
-			_ = _client.DefaultRequestHeaders.Remove("Authorization");
+			client.Dispose();
 		}
-		else
+
+		_clientsByUsername.Clear();
+
+		var count = Math.Min(usernames.Count, tokens.Count);
+		for (var i = 0; i < count; i++)
 		{
-			_ = _client.DefaultRequestHeaders.Remove("Authorization");
-			_client.DefaultRequestHeaders.Add("Authorization", $"Bearer {auth}");
+			var username = usernames[i];
+			var token = tokens[i];
+			_clientsByUsername[username] = CreateClient(token);
 		}
 	}
 
-	public static async Task<QueryResult<GitHubResponse, Exception>> RepoQuery(string query, int pageSize)
+	private static HttpClient GetAnyClient() => _clientsByUsername.Values.FirstOrDefault() ?? _defaultClient;
+	private static HttpClient GetClientByUsername(string username) => _clientsByUsername.TryGetValue(username, out HttpClient? client) ? client : _defaultClient;
+
+	public static async Task<List<GitHubRepo>> RepoQuery(string query)
 	{
 		_cts?.Cancel();
 		_cts = new CancellationTokenSource();
 
-		return await SendRequest<GitHubResponse>($"{_url}/search/repositories?per_page={pageSize}&q={query}", _cts.Token);
+		QueryResult<GitHubResponse, Exception> result = await SendRequest<GitHubResponse>(
+			GetAnyClient(),
+			$"{_url}/search/repositories?per_page={PageSize}&q={query}",
+			_cts.Token
+		);
+
+		return result.Match(
+			ok => ok.Items,
+			err => [new(err.GetType().Name, string.Empty, err.Message, false)]
+		);
 	}
 
-	public static async Task<QueryResult<List<GitHubRepo>, Exception>?> UserRepoQuery(string user, int pageSize)
+	public static async Task<List<GitHubRepo>> UserRepoQuery(string user)
 	{
 		_cts?.Cancel();
 		_cts = new CancellationTokenSource();
 
-		try
-		{
-			// Sort by latest update, only works if your target is top 30 that recently updated
-			return await SendRequest<List<GitHubRepo>>($"{_url}/users/{user}/repos?per_page={pageSize}&sort=updated", _cts.Token);
-		}
-		catch
-		{
-			return null;
-		}
+		QueryResult<List<GitHubRepo>, Exception> result = await SendRequest<List<GitHubRepo>>(
+			GetClientByUsername(user),
+			$"{_url}/users/{user}/repos?per_page={PageSize}&sort=updated",
+			_cts.Token
+		);
+
+		return result.Match(
+			ok => ok,
+			err => [new(err.GetType().Name, string.Empty, err.Message, false)]
+		);
 	}
 
-	public static async Task<QueryResult<List<GitHubRepo>, Exception>?> UserTokenQuery(int pageSize)
-	{
-		_cts?.Cancel();
-		_cts = new CancellationTokenSource();
-
-		try
-		{
-			return await SendRequest<List<GitHubRepo>>($"{_url}/user/repos?per_page={pageSize}&sort=updated", _cts.Token);
-		}
-		catch
-		{
-			return null;
-		}
-	}
-
-	private static async Task<QueryResult<T, Exception>> SendRequest<T>(string url, CancellationToken token)
+	private static async Task<QueryResult<T, Exception>> SendRequest<T>(HttpClient client, string url, CancellationToken token)
 	{
 		try
 		{
-			HttpResponseMessage responseMessage = await _client.GetAsync(url, token);
+			HttpResponseMessage responseMessage = await client.GetAsync(url, token);
 			_ = responseMessage.EnsureSuccessStatusCode();
 			var json = await responseMessage.Content.ReadAsStringAsync(token);
-			T? response = JsonSerializer.Deserialize<T>(json);
-			return response!;
+			T response = JsonSerializer.Deserialize<T>(json)!;
+			return response;
 		}
-		catch (OperationCanceledException)
+		catch (OperationCanceledException e)
 		{
-			return new Exception("Request was cancelled.");
+			// Not logging this
+			return e;
 		}
 		catch (Exception e)
 		{

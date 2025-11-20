@@ -17,12 +17,10 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 {
 	private static readonly CompositeFormat PluginInBrowserName = CompositeFormat.Parse(Resources.in_browser_name);
 	private const string DefaultUser = nameof(DefaultUser);
-	private string? _defaultUser;
+	private List<string>? _defaultUser;
 	private const string AuthToken = nameof(AuthToken);
-	private string? _authToken;
 	private const string SelfHostUrl = nameof(SelfHostUrl);
 	private const string ResultNumber = nameof(ResultNumber);
-	private int _resultNumber;
 
 	private string? _iconFolderPath;
 	private string? _iconFork;
@@ -42,7 +40,7 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 	[
 		new()
 		{
-			PluginOptionType = PluginAdditionalOption.AdditionalOptionType.Textbox,
+			PluginOptionType = PluginAdditionalOption.AdditionalOptionType.MultilineTextbox,
 			Key = DefaultUser,
 			DisplayLabel = Resources.option_default_user,
 			DisplayDescription = Resources.option_default_user_desc,
@@ -51,9 +49,10 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 		},
 		new()
 		{
-			PluginOptionType = PluginAdditionalOption.AdditionalOptionType.Textbox,
+			PluginOptionType = PluginAdditionalOption.AdditionalOptionType.MultilineTextbox,
 			Key = AuthToken,
 			DisplayLabel = Resources.option_auth_token,
+			DisplayDescription = Resources.option_auth_token_desc,
 		},
 		new()
 		{
@@ -76,11 +75,11 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 
 	public void UpdateSettings(PowerLauncherPluginSettings settings)
 	{
-		_defaultUser = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == DefaultUser)?.TextValue ?? string.Empty;
+		_defaultUser = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == DefaultUser)?.TextValueAsMultilineList ?? [];
 		// TODO: how to hide the auth token in settings?
-		_authToken = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == AuthToken)?.TextValue ?? string.Empty;
-		_resultNumber = (int?)(settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == ResultNumber)?.NumberValue) ?? 30;
-		GitHub.UpdateAuthSetting(_authToken);
+		List<string> authToken = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == AuthToken)?.TextValueAsMultilineList ?? [];
+		GitHub.UpdateAuth(_defaultUser, authToken);
+		GitHub.PageSize = (int?)(settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == ResultNumber)?.NumberValue) ?? 30;
 		PluginAdditionalOption selfHostUrl = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == SelfHostUrl)!;
 		if (selfHostUrl.Value)
 		{
@@ -119,13 +118,12 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 			return [];
 		}
 
-		List<GitHubRepo> repos;
-		string user;
+		List<Result> results;
 		string target;
 
 		if (search.StartsWith('/'))
 		{
-			if (string.IsNullOrEmpty(_defaultUser))
+			if (_defaultUser!.Count == 0)
 			{
 				return
 				[
@@ -140,37 +138,53 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 				];
 			}
 
-			user = _defaultUser;
+			results = [];
 			target = search[1..];
-			repos = !string.IsNullOrEmpty(_authToken) ? _cache.GetOrAdd(user, UserTokenQuery) : _cache.GetOrAdd(user, () => UserRepoQuery(user));
+			foreach (var user in _defaultUser!)
+			{
+				results.AddRange(_cache.GetOrAdd(user, () => GitHub.UserRepoQuery(user)).Result.ConvertAll(repo =>
+				{
+					var parts = repo.FullName.Split('/', 2);
+					var repoName = parts.Length == 1 ? parts[0] : parts[1];
+					MatchResult match = StringMatcher.FuzzySearch(target, repoName);
+					return new Result
+					{
+						Title = repo.FullName,
+						SubTitle = repo.Description,
+						QueryTextDisplay = search,
+						IcoPath = repo.Fork ? _iconFork : _iconRepo,
+						Score = match.Score,
+						TitleHighlightData = match.MatchData?.ConvertAll(e => e + user.Length + 1),
+						ContextData = new ResultData(repo.HtmlUrl),
+						Action = action => Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl),
+					};
+				}));
+			}
 		}
 		else
 		{
 			var split = search.Split('/', 2);
-
-			user = split[0];
+			var user = split[0];
 			target = split[1];
 
-			repos = _cache.GetOrAdd(user, () => UserRepoQuery(user));
-		}
-
-		List<Result> results = repos.ConvertAll(repo =>
-		{
-			var parts = repo.FullName.Split('/', 2);
-			var repoName = parts.Length == 1 ? parts[0] : parts[1];
-			MatchResult match = StringMatcher.FuzzySearch(target, repoName);
-			return new Result
+			results = _cache.GetOrAdd(user, () => GitHub.UserRepoQuery(user)).Result.ConvertAll(repo =>
 			{
-				Title = repo.FullName,
-				SubTitle = repo.Description,
-				QueryTextDisplay = search,
-				IcoPath = repo.Fork ? _iconFork : _iconRepo,
-				Score = match.Score,
-				TitleHighlightData = match.MatchData?.ConvertAll(e => e + user.Length + 1),
-				ContextData = new ResultData(repo.HtmlUrl),
-				Action = action => Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl),
-			};
-		});
+				var parts = repo.FullName.Split('/', 2);
+				var repoName = parts.Length == 1 ? parts[0] : parts[1];
+				MatchResult match = StringMatcher.FuzzySearch(target, repoName);
+				return new Result
+				{
+					Title = repo.FullName,
+					SubTitle = repo.Description,
+					QueryTextDisplay = search,
+					IcoPath = repo.Fork ? _iconFork : _iconRepo,
+					Score = match.Score,
+					TitleHighlightData = match.MatchData?.ConvertAll(e => e + user.Length + 1),
+					ContextData = new ResultData(repo.HtmlUrl),
+					Action = action => Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl),
+				};
+			});
+		}
 
 		if (!string.IsNullOrEmpty(target))
 		{
@@ -178,14 +192,6 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 		}
 
 		return results;
-
-		List<GitHubRepo> UserRepoQuery(string user) => GitHub.UserRepoQuery(user, _resultNumber).Result!.Match(
-			ok: r => r,
-			err: e => [new(e.GetType().Name, string.Empty, e.Message, false)]);
-
-		List<GitHubRepo> UserTokenQuery() => GitHub.UserTokenQuery(_resultNumber).Result!.Match(
-		   ok: r => r,
-		   err: e => [new(e.GetType().Name, string.Empty, e.Message, false)]);
 	}
 
 	// handle repo search with delay
@@ -193,7 +199,7 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 	{
 		return !delayedExecution || query.Search.Contains('/') || string.IsNullOrWhiteSpace(query.Search)
 			? []
-			: RepoQuery(query.Search).ConvertAll(repo => new Result
+			: GitHub.RepoQuery(query.Search).Result.ConvertAll(repo => new Result
 			{
 				Title = repo.FullName,
 				SubTitle = repo.Description,
@@ -202,10 +208,6 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 				ContextData = new ResultData(repo.HtmlUrl),
 				Action = action => Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl),
 			});
-
-		List<GitHubRepo> RepoQuery(string search) => GitHub.RepoQuery(search, _resultNumber).Result.Match(
-				ok: r => r.Items,
-				err: e => [new(e.GetType().Name, string.Empty, e.Message, false)]);
 	}
 
 	public List<ContextMenuResult> LoadContextMenus(Result selectedResult)
