@@ -76,7 +76,6 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 	public void UpdateSettings(PowerLauncherPluginSettings settings)
 	{
 		_defaultUser = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == DefaultUser)?.TextValueAsMultilineList ?? [];
-		// TODO: how to hide the auth token in settings?
 		List<string> authToken = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == AuthToken)?.TextValueAsMultilineList ?? [];
 		GitHub.UpdateAuth(_defaultUser, authToken);
 		GitHub.PageSize = (int?)(settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == ResultNumber)?.NumberValue) ?? 30;
@@ -90,8 +89,6 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 	// handle user repo user
 	public List<Result> Query(Query query)
 	{
-		ArgumentNullException.ThrowIfNull(query);
-
 		var search = query.Search;
 
 		// empty query
@@ -120,7 +117,6 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 
 		List<Result> results;
 		string target;
-
 		if (search.StartsWith('/'))
 		{
 			if (_defaultUser!.Count == 0)
@@ -181,7 +177,7 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 					Score = match.Score,
 					TitleHighlightData = match.MatchData?.ConvertAll(e => e + user.Length + 1),
 					ContextData = new ResultData(repo.HtmlUrl),
-					Action = action => Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl),
+					Action = _ => Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl),
 				};
 			});
 		}
@@ -206,7 +202,7 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 				QueryTextDisplay = query.Search,
 				IcoPath = repo.Fork ? _iconFork : _iconRepo,
 				ContextData = new ResultData(repo.HtmlUrl),
-				Action = action => Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl),
+				Action = _ => Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl),
 			});
 	}
 

@@ -113,11 +113,17 @@ public static class GitHub
 		_cts?.Cancel();
 		_cts = new CancellationTokenSource();
 
-		QueryResult<List<GitHubRepo>, Exception> result = await SendRequest<List<GitHubRepo>>(
-			GetClientByUsername(user),
-			$"{_url}/users/{user}/repos?per_page={PageSize}&sort=updated",
-			_cts.Token
-		);
+		QueryResult<List<GitHubRepo>, Exception> result = _clientsByUsername.TryGetValue(user, out HttpClient? client)
+			? await SendRequest<List<GitHubRepo>>(
+				client,
+				$"{_url}/user/repos?per_page={PageSize}&sort=updated",
+				_cts.Token
+			)
+			: await SendRequest<List<GitHubRepo>>(
+				_defaultClient,
+				$"{_url}/users/{user}/repos?per_page={PageSize}&sort=updated",
+				_cts.Token
+			);
 
 		return result.Match(
 			ok => ok,
