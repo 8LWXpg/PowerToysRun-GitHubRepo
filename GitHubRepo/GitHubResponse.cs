@@ -89,23 +89,22 @@ public static class GitHub
 	}
 
 	private static HttpClient GetAnyClient() => _clientsByUsername.Values.FirstOrDefault() ?? _defaultClient;
-	private static HttpClient GetClientByUsername(string username) => _clientsByUsername.TryGetValue(username, out HttpClient? client) ? client : _defaultClient;
 
 	public static async Task<List<GitHubRepo>> RepoQuery(string query)
 	{
 		_cts?.Cancel();
 		_cts = new CancellationTokenSource();
 
-		QueryResult<GitHubResponse, Exception> result = await SendRequest<GitHubResponse>(
+		QueryResult<GitHubResponse, Exception>? result = await SendRequest<GitHubResponse>(
 			GetAnyClient(),
 			$"{_url}/search/repositories?per_page={PageSize}&q={query}",
 			_cts.Token
 		);
 
-		return result.Match(
+		return result?.Match(
 			ok => ok.Items,
 			err => [new(err.GetType().Name, string.Empty, err.Message, false)]
-		);
+		) ?? [];
 	}
 
 	public static async Task<List<GitHubRepo>> UserRepoQuery(string user)
@@ -113,7 +112,7 @@ public static class GitHub
 		_cts?.Cancel();
 		_cts = new CancellationTokenSource();
 
-		QueryResult<List<GitHubRepo>, Exception> result = _clientsByUsername.TryGetValue(user, out HttpClient? client)
+		QueryResult<List<GitHubRepo>, Exception>? result = _clientsByUsername.TryGetValue(user, out HttpClient? client)
 			? await SendRequest<List<GitHubRepo>>(
 				client,
 				$"{_url}/user/repos?per_page={PageSize}&sort=updated",
@@ -125,13 +124,13 @@ public static class GitHub
 				_cts.Token
 			);
 
-		return result.Match(
+		return result?.Match(
 			ok => ok,
 			err => [new(err.GetType().Name, string.Empty, err.Message, false)]
-		);
+		) ?? [];
 	}
 
-	private static async Task<QueryResult<T, Exception>> SendRequest<T>(HttpClient client, string url, CancellationToken token)
+	private static async Task<QueryResult<T, Exception>?> SendRequest<T>(HttpClient client, string url, CancellationToken token)
 	{
 		try
 		{
@@ -141,10 +140,10 @@ public static class GitHub
 			T response = JsonSerializer.Deserialize<T>(json)!;
 			return response;
 		}
-		catch (OperationCanceledException e)
+		catch (OperationCanceledException)
 		{
 			// Not logging this
-			return e;
+			return null;
 		}
 		catch (Exception e)
 		{
