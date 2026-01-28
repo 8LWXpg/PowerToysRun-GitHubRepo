@@ -129,6 +129,9 @@
   <data name="option_auth_token" xml:space="preserve">
     <value>GitHub 验证令牌</value>
   </data>
+  <data name="option_auth_token_desc" xml:space="preserve">
+    <value>每个用户对应一个令牌，按换行分隔</value>
+  </data>
   <data name="option_default_user" xml:space="preserve">
     <value>默认用户</value>
   </data>
@@ -153,5 +156,20 @@
   </data>
   <data name="plugin_name" xml:space="preserve">
     <value>GitHub 仓库</value>
+  </data>
+  <data name="option_self_host_link" xml:space="preserve">
+    <value>搜索私有部署化 GitHub</value>
+  </data>
+  <data name="option_self_host_link_desc" xml:space="preserve">
+    <value>此设置将替换当前使用的默认地址</value>
+  </data>
+  <data name="option_url" xml:space="preserve">
+    <value>API接口地址</value>
+  </data>
+  <data name="option_results_number" xml:space="preserve">
+    <value>结果数量</value>
+  </data>
+  <data name="option_results_number_desc" xml:space="preserve">
+    <value>选择每次加载的结果数量</value>
   </data>
 </root>
