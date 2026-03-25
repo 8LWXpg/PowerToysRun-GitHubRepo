@@ -43,12 +43,6 @@
   <data name="option_default_user_desc" xml:space="preserve">
     <value>Стандартний користувач під час введення «/»</value>
   </data>
-  <data name="plugin_description" xml:space="preserve">
-    <value>Пошук у репозиторії GitHub</value>
-  </data>
-  <data name="plugin_name" xml:space="preserve">
-    <value>Репозиторій GitHub</value>
-  </data>
   <data name="option_self_host_link" xml:space="preserve">
     <value>Пошук на власному сервері GitHub</value>
   </data>
@@ -57,5 +51,11 @@
   </data>
   <data name="option_url" xml:space="preserve">
     <value>URL-адреса кінцевої точки API</value>
+  </data>
+  <data name="plugin_description" xml:space="preserve">
+    <value>Пошук у репозиторії GitHub</value>
+  </data>
+  <data name="plugin_name" xml:space="preserve">
+    <value>Репозиторій GitHub</value>
   </data>
 </root>
