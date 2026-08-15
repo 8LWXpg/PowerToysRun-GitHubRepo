@@ -92,7 +92,7 @@ public static class GitHub
 
 	public static async Task<List<GitHubRepo>> RepoQuery(string query)
 	{
-		_ = _cts?.CancelAsync();
+		_cts?.Cancel();
 		_cts?.Dispose();
 		_cts = new CancellationTokenSource();
 
@@ -110,7 +110,7 @@ public static class GitHub
 
 	public static async Task<List<GitHubRepo>> UserRepoQuery(string user)
 	{
-		_ = _cts?.CancelAsync();
+		_cts?.Cancel();
 		_cts?.Dispose();
 		_cts = new CancellationTokenSource();
 

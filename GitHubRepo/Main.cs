@@ -15,7 +15,7 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo;
 
 public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable, IDisposable, IDelayedExecutionPlugin, IContextMenu
 {
-	private static readonly CompositeFormat PluginInBrowserName = CompositeFormat.Parse(Resources.in_browser_name);
+	private static readonly CompositeFormat _pluginInBrowserName = CompositeFormat.Parse(Resources.in_browser_name);
 	private const string DefaultUser = nameof(DefaultUser);
 	private List<string>? _defaultUser;
 	private const string AuthToken = nameof(AuthToken);
@@ -100,7 +100,7 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 				new Result
 				{
 					Title = Resources.open_github,
-					SubTitle = string.Format(CultureInfo.CurrentCulture, PluginInBrowserName, BrowserInfo.Name ?? BrowserInfo.MSEdgeName),
+					SubTitle = string.Format(CultureInfo.CurrentCulture, _pluginInBrowserName, BrowserInfo.Name ?? BrowserInfo.MSEdgeName),
 					QueryTextDisplay = " ",
 					IcoPath = _icon,
 					ProgramArguments = arguments,
