@@ -44,12 +44,12 @@ public static class GitHub
 
 	// Used to cancel the request if the user types a new query
 	private static CancellationTokenSource? _cts;
-	private static string _url = "https://api.github.com";
+
 	public static string Url
 	{
-		get => _url;
-		set => _url = string.IsNullOrWhiteSpace(value) ? "https://api.github.com" : value;
-	}
+		get;
+		set => field = string.IsNullOrWhiteSpace(value) ? "https://api.github.com" : value;
+	} = "https://api.github.com";
 	public static int PageSize { get; set; }
 
 	private static HttpClient CreateClient(string? token)
@@ -92,12 +92,13 @@ public static class GitHub
 
 	public static async Task<List<GitHubRepo>> RepoQuery(string query)
 	{
-		_cts?.Cancel();
+		_ = _cts?.CancelAsync();
+		_cts?.Dispose();
 		_cts = new CancellationTokenSource();
 
 		QueryResult<GitHubResponse, Exception>? result = await SendRequest<GitHubResponse>(
 			GetAnyClient(),
-			$"{_url}/search/repositories?per_page={PageSize}&q={query}",
+			$"{Url}/search/repositories?per_page={PageSize}&q={query}",
 			_cts.Token
 		);
 
@@ -109,18 +110,19 @@ public static class GitHub
 
 	public static async Task<List<GitHubRepo>> UserRepoQuery(string user)
 	{
-		_cts?.Cancel();
+		_ = _cts?.CancelAsync();
+		_cts?.Dispose();
 		_cts = new CancellationTokenSource();
 
 		QueryResult<List<GitHubRepo>, Exception>? result = _clientsByUsername.TryGetValue(user, out HttpClient? client)
 			? await SendRequest<List<GitHubRepo>>(
 				client,
-				$"{_url}/user/repos?per_page={PageSize}&sort=updated",
+				$"{Url}/user/repos?per_page={PageSize}&sort=updated",
 				_cts.Token
 			)
 			: await SendRequest<List<GitHubRepo>>(
 				_defaultClient,
-				$"{_url}/users/{user}/repos?per_page={PageSize}&sort=updated",
+				$"{Url}/users/{user}/repos?per_page={PageSize}&sort=updated",
 				_cts.Token
 			);
 

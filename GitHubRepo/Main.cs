@@ -110,7 +110,7 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 		}
 
 		// delay execution for repo query
-		if (!search.Contains('/'))
+		if (!search.Contains('/', StringComparison.Ordinal))
 		{
 			return [];
 		}
