@@ -1,7 +1,6 @@
 # this script uses [gsudo](https://github.com/gerardog/gsudo)
 
-Push-Location
-Set-Location $PSScriptRoot
+Push-Location $PSScriptRoot
 
 # dotnet build -c Debug /p:Platform=x64
 

@@ -44,10 +44,12 @@
 		<Reference Include="PowerToys.Settings.UI.Lib">
 			<HintPath>.\Lib\PowerToys.Settings.UI.Lib.dll</HintPath>
 		</Reference>
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="LazyCache" Version="2.4.0" />
+		<Reference Include="LazyCache">
+			<HintPath>.\Lib\LazyCache.dll</HintPath>
+		</Reference>
+		<Reference Include="Microsoft.Extensions.Caching.Abstractions">
+			<HintPath>.\Lib\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
+		</Reference>
 	</ItemGroup>
 
 	<ItemGroup>

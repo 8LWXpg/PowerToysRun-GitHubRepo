@@ -1,5 +1,4 @@
-Push-Location
-Set-Location $PSScriptRoot
+Push-Location $PSScriptRoot
 
 $name = 'GitHubRepo'
 $assembly = "Community.PowerToys.Run.Plugin.$name"
