@@ -151,6 +151,12 @@
   <data name="option_default_user_desc" xml:space="preserve">
     <value>The user used when type "/", newline separated</value>
   </data>
+  <data name="option_disable_usage_scoring" xml:space="preserve">
+    <value>Disable usage-based scoring</value>
+  </data>
+  <data name="option_disable_usage_scoring_desc" xml:space="preserve">
+    <value>Enable this to preserve the default order of repository query</value>
+  </data>
   <data name="option_results_number" xml:space="preserve">
     <value>Number of results</value>
   </data>

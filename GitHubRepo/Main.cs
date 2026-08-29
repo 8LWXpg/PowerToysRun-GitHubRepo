@@ -21,6 +21,8 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 	private const string AuthToken = nameof(AuthToken);
 	private const string SelfHostUrl = nameof(SelfHostUrl);
 	private const string ResultNumber = nameof(ResultNumber);
+	private const string DisableUsageScoring = nameof(DisableUsageScoring);
+	private bool _disableUsageScoring = false;
 
 	private string? _iconFolderPath;
 	private string? _iconFork;
@@ -71,11 +73,19 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 			NumberBoxMin = 30,
 			NumberBoxMax = 100,
 		},
+		new()
+		{
+			PluginOptionType = PluginAdditionalOption.AdditionalOptionType.Checkbox,
+			Key = DisableUsageScoring,
+			DisplayLabel = Resources.option_disable_usage_scoring,
+			DisplayDescription = Resources.option_disable_usage_scoring_desc,
+		}
 	];
 
 	public void UpdateSettings(PowerLauncherPluginSettings settings)
 	{
 		_defaultUser = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == DefaultUser)?.TextValueAsMultilineList ?? [];
+		_disableUsageScoring = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == DisableUsageScoring)?.Value ?? false;
 		List<string> authToken = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == AuthToken)?.TextValueAsMultilineList ?? [];
 		GitHub.UpdateAuth(_defaultUser, authToken);
 		GitHub.PageSize = (int?)(settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == ResultNumber)?.NumberValue) ?? 30;
@@ -202,6 +212,7 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 				QueryTextDisplay = query.Search,
 				IcoPath = repo.Fork ? _iconFork : _iconRepo,
 				ContextData = new ResultData(repo.HtmlUrl),
+				DisableUsageBasedScoring = _disableUsageScoring,
 				Action = _ => Helper.OpenCommandInShell(BrowserInfo.Path, BrowserInfo.ArgumentsPattern, repo.HtmlUrl),
 			});
 	}

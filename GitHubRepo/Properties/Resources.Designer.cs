@@ -160,6 +160,24 @@ namespace Community.PowerToys.Run.Plugin.GitHubRepo.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disable usage-based scoring.
+        /// </summary>
+        internal static string option_disable_usage_scoring {
+            get {
+                return ResourceManager.GetString("option_disable_usage_scoring", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable this to preserve the default query ranking.
+        /// </summary>
+        internal static string option_disable_usage_scoring_desc {
+            get {
+                return ResourceManager.GetString("option_disable_usage_scoring_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Number of results.
         /// </summary>
         internal static string option_results_number {
