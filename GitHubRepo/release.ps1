@@ -12,7 +12,7 @@ Remove-Item ./out/*.zip -Recurse -Force -ErrorAction Ignore
 foreach ($arch in $archs) {
 	$releasePath = "./bin/$arch/Release/net10.0-windows"
 
-	dotnet build -c Release /p:Platform=$arch
+	dotnet build -c Release -p:Platform=$arch
 
 	Remove-Item "./out/$name/*" -Recurse -Force -ErrorAction Ignore
 	$items = @(

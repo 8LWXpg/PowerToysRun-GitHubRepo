@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.14.1
+
+- Fixed API endpoint used by user and token access query.
+
 ## 1.14.0
 
 - Added `Disable usage-based scoring` option, enable this to preserve the default order of repository query.

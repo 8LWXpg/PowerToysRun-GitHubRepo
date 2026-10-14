@@ -39,8 +39,8 @@ public record GitHubRepo
 
 public static class GitHub
 {
-	private static readonly Dictionary<string, HttpClient> _clientsByUsername = [];
-	private static readonly HttpClient _defaultClient = CreateClient(null);
+	private static readonly HttpClient _client = CreateClient();
+	private static Dictionary<string, string> _tokensByUsername = [];
 
 	// Used to cancel the request if the user types a new query
 	private static CancellationTokenSource? _cts;
@@ -52,43 +52,19 @@ public static class GitHub
 	} = "https://api.github.com";
 	public static int PageSize { get; set; }
 
-	private static HttpClient CreateClient(string? token)
+	private static HttpClient CreateClient()
 	{
 		var client = new HttpClient();
 		client.DefaultRequestHeaders.UserAgent.Add(ProductInfoHeaderValue.Parse("PowerToys"));
 		client.DefaultRequestHeaders.Add("Accept", "application/vnd.github+json");
 		client.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
-
-		if (!string.IsNullOrEmpty(token))
-		{
-			client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-		}
-
 		return client;
 	}
 
 	/// <summary>
 	/// Update <c>_clientsByUsername</c> with new usernames and <c>HttpClient</c> with token
 	/// </summary>
-	public static void UpdateAuth(IReadOnlyList<string> usernames, IReadOnlyList<string> tokens)
-	{
-		foreach (HttpClient client in _clientsByUsername.Values)
-		{
-			client.Dispose();
-		}
-
-		_clientsByUsername.Clear();
-
-		var count = Math.Min(usernames.Count, tokens.Count);
-		for (var i = 0; i < count; i++)
-		{
-			var username = usernames[i];
-			var token = tokens[i];
-			_clientsByUsername[username] = CreateClient(token);
-		}
-	}
-
-	private static HttpClient GetAnyClient() => _clientsByUsername.Values.FirstOrDefault() ?? _defaultClient;
+	public static void UpdateAuth(IReadOnlySet<string> usernames, IReadOnlySet<string> tokens) => _tokensByUsername = usernames.Zip(tokens).ToDictionary();
 
 	public static async Task<List<GitHubRepo>> RepoQuery(string query)
 	{
@@ -97,7 +73,7 @@ public static class GitHub
 		_cts = new CancellationTokenSource();
 
 		QueryResult<GitHubResponse, Exception>? result = await SendRequest<GitHubResponse>(
-			GetAnyClient(),
+			_tokensByUsername.FirstOrDefault().Value,
 			$"{Url}/search/repositories?per_page={PageSize}&q={query}",
 			_cts.Token
 		);
@@ -108,20 +84,32 @@ public static class GitHub
 		) ?? [];
 	}
 
+	public static async Task<List<GitHubRepo>> TokenQuery(string user)
+	{
+		_cts?.Cancel();
+		_cts?.Dispose();
+		_cts = new CancellationTokenSource();
+
+		QueryResult<List<GitHubRepo>, Exception>? result = await SendRequest<List<GitHubRepo>>(
+				_tokensByUsername[user],
+				$"{Url}/user/repos?per_page={PageSize}&sort=updated",
+				_cts.Token
+			);
+
+		return result?.Match(
+			ok => ok,
+			err => [new(err.GetType().Name, string.Empty, err.Message, false)]
+		) ?? [];
+	}
+
 	public static async Task<List<GitHubRepo>> UserRepoQuery(string user)
 	{
 		_cts?.Cancel();
 		_cts?.Dispose();
 		_cts = new CancellationTokenSource();
 
-		QueryResult<List<GitHubRepo>, Exception>? result = _clientsByUsername.TryGetValue(user, out HttpClient? client)
-			? await SendRequest<List<GitHubRepo>>(
-				client,
-				$"{Url}/user/repos?per_page={PageSize}&sort=updated",
-				_cts.Token
-			)
-			: await SendRequest<List<GitHubRepo>>(
-				_defaultClient,
+		QueryResult<List<GitHubRepo>, Exception>? result = await SendRequest<List<GitHubRepo>>(
+				_tokensByUsername.FirstOrDefault().Value,
 				$"{Url}/users/{user}/repos?per_page={PageSize}&sort=updated",
 				_cts.Token
 			);
@@ -132,15 +120,20 @@ public static class GitHub
 		) ?? [];
 	}
 
-	private static async Task<QueryResult<T, Exception>?> SendRequest<T>(HttpClient client, string url, CancellationToken token)
+	private static async Task<QueryResult<T, Exception>?> SendRequest<T>(string? token, string url, CancellationToken ct)
 	{
 		try
 		{
-			HttpResponseMessage responseMessage = await client.GetAsync(url, token);
-			_ = responseMessage.EnsureSuccessStatusCode();
-			var json = await responseMessage.Content.ReadAsStringAsync(token);
-			T response = JsonSerializer.Deserialize<T>(json)!;
-			return response;
+			using var request = new HttpRequestMessage(HttpMethod.Get, url);
+			if (!string.IsNullOrEmpty(token))
+			{
+				request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+			}
+
+			using HttpResponseMessage response = await _client.SendAsync(request, ct);
+			_ = response.EnsureSuccessStatusCode();
+			var json = await response.Content.ReadAsStringAsync(ct);
+			return JsonSerializer.Deserialize<T>(json)!;
 		}
 		catch (OperationCanceledException)
 		{
