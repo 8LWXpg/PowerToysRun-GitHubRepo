@@ -74,7 +74,7 @@ public static class GitHub
 
 		QueryResult<GitHubResponse, Exception>? result = await SendRequest<GitHubResponse>(
 			_tokensByUsername.FirstOrDefault().Value,
-			$"{Url}/search/repositories?per_page={PageSize}&q={query}",
+			$"{Url}/search/repositories?per_page={PageSize}&q={Uri.EscapeDataString(query)}",
 			_cts.Token
 		);
 
