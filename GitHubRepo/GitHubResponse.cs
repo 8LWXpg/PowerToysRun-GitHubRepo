@@ -65,18 +65,7 @@ public static class GitHub
 	/// Update token lookup while preserving the configured line order between users and tokens.
 	/// </summary>
 	public static void UpdateAuth(IReadOnlyList<string> usernames, IReadOnlyList<string> tokens)
-	{
-		Dictionary<string, string> tokensByUsername = [];
-		for (int i = 0; i < usernames.Count && i < tokens.Count; i++)
-		{
-			if (!string.IsNullOrWhiteSpace(usernames[i]) && !string.IsNullOrWhiteSpace(tokens[i]))
-			{
-				tokensByUsername[usernames[i]] = tokens[i];
-			}
-		}
-
-		_tokensByUsername = tokensByUsername;
-	}
+		=> _tokensByUsername = usernames.Zip(tokens).ToDictionary();
 
 	public static async Task<List<GitHubRepo>> RepoQuery(string query)
 	{

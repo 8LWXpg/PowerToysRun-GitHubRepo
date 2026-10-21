@@ -1,12 +1,12 @@
-using Community.PowerToys.Run.Plugin.GitHubRepo.Properties;
-using LazyCache;
-using ManagedCommon;
-using Microsoft.PowerToys.Settings.UI.Library;
 using System.Globalization;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Community.PowerToys.Run.Plugin.GitHubRepo.Properties;
+using LazyCache;
+using ManagedCommon;
+using Microsoft.PowerToys.Settings.UI.Library;
 using Wox.Infrastructure;
 using Wox.Plugin;
 using BrowserInfo = Wox.Plugin.Common.DefaultBrowserInfo;
@@ -84,9 +84,9 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 
 	public void UpdateSettings(PowerLauncherPluginSettings settings)
 	{
-		_defaultUser = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == DefaultUser)?.TextValueAsMultilineList ?? [];
+		_defaultUser = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == DefaultUser)?.TextValueAsMultilineList.Distinct().ToList() ?? [];
 		_disableUsageScoring = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == DisableUsageScoring)?.Value ?? false;
-		List<string> authToken = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == AuthToken)?.TextValueAsMultilineList ?? [];
+		List<string> authToken = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == AuthToken)?.TextValueAsMultilineList.Distinct().ToList() ?? [];
 		GitHub.UpdateAuth(_defaultUser, authToken);
 		GitHub.PageSize = (int?)(settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == ResultNumber)?.NumberValue) ?? 30;
 		PluginAdditionalOption selfHostUrl = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == SelfHostUrl)!;
