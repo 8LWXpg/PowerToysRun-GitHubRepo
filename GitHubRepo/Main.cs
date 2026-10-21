@@ -87,7 +87,7 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 		_defaultUser = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == DefaultUser)?.TextValueAsMultilineList ?? [];
 		_disableUsageScoring = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == DisableUsageScoring)?.Value ?? false;
 		List<string> authToken = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == AuthToken)?.TextValueAsMultilineList ?? [];
-		GitHub.UpdateAuth(_defaultUser.ToHashSet(), authToken.ToHashSet());
+		GitHub.UpdateAuth(_defaultUser, authToken);
 		GitHub.PageSize = (int?)(settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == ResultNumber)?.NumberValue) ?? 30;
 		PluginAdditionalOption selfHostUrl = settings?.AdditionalOptions?.FirstOrDefault(static x => x.Key == SelfHostUrl)!;
 		if (selfHostUrl.Value)
@@ -148,7 +148,7 @@ public partial class Main : IPlugin, IPluginI18n, ISettingProvider, IReloadable,
 			target = search[1..];
 			foreach (var user in _defaultUser!)
 			{
-				results.AddRange(_cache.GetOrAdd(user, () => GitHub.TokenQuery(user)).Result.ConvertAll(repo =>
+				results.AddRange(_cache.GetOrAdd(user, () => GitHub.DefaultUserQuery(user)).Result.ConvertAll(repo =>
 				{
 					var parts = repo.FullName.Split('/', 2);
 					var repoName = parts.Length == 1 ? parts[0] : parts[1];

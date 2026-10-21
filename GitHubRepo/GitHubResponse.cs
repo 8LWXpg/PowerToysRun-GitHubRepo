@@ -62,9 +62,21 @@ public static class GitHub
 	}
 
 	/// <summary>
-	/// Update <c>_clientsByUsername</c> with new usernames and <c>HttpClient</c> with token
+	/// Update token lookup while preserving the configured line order between users and tokens.
 	/// </summary>
-	public static void UpdateAuth(IReadOnlySet<string> usernames, IReadOnlySet<string> tokens) => _tokensByUsername = usernames.Zip(tokens).ToDictionary();
+	public static void UpdateAuth(IReadOnlyList<string> usernames, IReadOnlyList<string> tokens)
+	{
+		Dictionary<string, string> tokensByUsername = [];
+		for (int i = 0; i < usernames.Count && i < tokens.Count; i++)
+		{
+			if (!string.IsNullOrWhiteSpace(usernames[i]) && !string.IsNullOrWhiteSpace(tokens[i]))
+			{
+				tokensByUsername[usernames[i]] = tokens[i];
+			}
+		}
+
+		_tokensByUsername = tokensByUsername;
+	}
 
 	public static async Task<List<GitHubRepo>> RepoQuery(string query)
 	{
@@ -83,6 +95,9 @@ public static class GitHub
 			err => [new(err.GetType().Name, string.Empty, err.Message, false)]
 		) ?? [];
 	}
+
+	public static Task<List<GitHubRepo>> DefaultUserQuery(string user) =>
+		_tokensByUsername.ContainsKey(user) ? TokenQuery(user) : UserRepoQuery(user);
 
 	public static async Task<List<GitHubRepo>> TokenQuery(string user)
 	{
