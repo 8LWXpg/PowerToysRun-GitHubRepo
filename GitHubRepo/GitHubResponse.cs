@@ -61,10 +61,8 @@ public static class GitHub
 		return client;
 	}
 
-	/// <summary>
-	/// Update <c>_clientsByUsername</c> with new usernames and <c>HttpClient</c> with token
-	/// </summary>
-	public static void UpdateAuth(IReadOnlySet<string> usernames, IReadOnlySet<string> tokens) => _tokensByUsername = usernames.Zip(tokens).ToDictionary();
+	public static void UpdateAuth(IReadOnlyList<string> usernames, IReadOnlyList<string> tokens)
+		=> _tokensByUsername = usernames.Zip(tokens).ToDictionary();
 
 	public static async Task<List<GitHubRepo>> RepoQuery(string query)
 	{
@@ -83,6 +81,9 @@ public static class GitHub
 			err => [new(err.GetType().Name, string.Empty, err.Message, false)]
 		) ?? [];
 	}
+
+	public static Task<List<GitHubRepo>> DefaultUserQuery(string user) =>
+		_tokensByUsername.ContainsKey(user) ? TokenQuery(user) : UserRepoQuery(user);
 
 	public static async Task<List<GitHubRepo>> TokenQuery(string user)
 	{

@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Fixed default-user search without an auth token.
+
 ## 1.14.1
 
 - Fixed API endpoint used by user and token access query.
