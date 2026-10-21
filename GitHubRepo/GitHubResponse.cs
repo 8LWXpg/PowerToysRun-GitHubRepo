@@ -61,9 +61,6 @@ public static class GitHub
 		return client;
 	}
 
-	/// <summary>
-	/// Update token lookup while preserving the configured line order between users and tokens.
-	/// </summary>
 	public static void UpdateAuth(IReadOnlyList<string> usernames, IReadOnlyList<string> tokens)
 		=> _tokensByUsername = usernames.Zip(tokens).ToDictionary();
 
