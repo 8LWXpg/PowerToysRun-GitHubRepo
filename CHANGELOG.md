@@ -1,8 +1,9 @@
 # Changelog
 
-## Unreleased
+## 1.14.2
 
 - Fixed default-user search without an auth token.
+- Fixed query url encoding.
 
 ## 1.14.1
 
